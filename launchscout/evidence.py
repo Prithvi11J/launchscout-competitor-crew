@@ -76,7 +76,7 @@ def extract_evidence(messages: list[dict] | None) -> list[Evidence]:
         if m.get("role") != "tool" or not isinstance(m.get("content"), str):
             continue
         content, args = m["content"], calls.get(m.get("tool_call_id", ""), {})
-        if "usage limit" in content[:200].lower():
+        if "usage limit" in content[:200].lower() or content.startswith("Tool refusal:"):
             continue  # a tool refusing to run is not evidence about the page it was asked for
         if "website_url" in args:
             page = content.removeprefix(SCRAPE_PREFIX)
@@ -124,6 +124,9 @@ def owns_domain(url: str, name: str) -> bool:
     core = "".join(w for w in normalize_text(name).split() if w not in GENERIC_WORDS)
     if len(label) < 4 or label in GENERIC_WORDS:
         return False
+    initials = "".join(w[0] for w in normalize_text(name).split() if w not in {"the", "and", "of"})
+    if len(initials) >= 3 and label.startswith(initials):
+        return True  # wsda.in is Winning Steps Dance Academy's own site
     return (label in squashed or (len(core) >= 4 and core in label))
 
 

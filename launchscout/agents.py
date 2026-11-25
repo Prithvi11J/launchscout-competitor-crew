@@ -8,7 +8,7 @@ where we put judgement: what counts as a competitor, what to distrust.
 from crewai import Agent
 
 from launchscout.config import get_llm
-from launchscout.tools import page_reader, web_search
+from launchscout.tools import new_budget, research_tools
 
 
 def market_researcher(llm=None, tools=None) -> Agent:
@@ -27,15 +27,16 @@ def market_researcher(llm=None, tools=None) -> Agent:
             "an ongoing basis; a business in a different style or category, one that mainly serves a "
             "different audience, a one-off event, or an individual freelancer or home tutor (a person, not "
             "a business with its own venue or brand) is not, even if it shows up in the same search. You "
-            "spread your research across several sources instead of copying one listing page, you prefer "
-            "the business's own pages and recent posts, and you keep the exact URL of every page you take "
+            "spread your research across several sources instead of copying one listing page. Listings and "
+            "social posts are for discovering businesses; the business's own website is where you confirm "
+            "its prices, timings and address. You keep the exact URL of every page you take "
             "a fact from. A google.com/goto redirect link is not a source a founder can open: when a "
             "useful result comes as one, search again for that business's own website, Instagram post "
             "or listing page and cite that instead."
         ),
-        tools=tools if tools is not None else [web_search(), page_reader()],
+        tools=tools if tools is not None else research_tools(new_budget()),
         llm=llm or get_llm(),
-        max_iter=22,  # thinking + tool steps before it must answer; must exceed the 12 + 4 tool budget
+        max_iter=26,  # thinking + tool steps per attempt; the tool budget per run lives in tools.py
         allow_delegation=False,
         verbose=True,  # print the agent's reasoning and tool calls while it runs
     )

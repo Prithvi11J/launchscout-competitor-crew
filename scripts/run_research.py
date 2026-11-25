@@ -23,6 +23,7 @@ from launchscout.brief import DEMO_BRIEF, BusinessBrief  # noqa: E402
 from launchscout.checks import duplicate_problems, find_problems  # noqa: E402
 from launchscout.crew import build_crew  # noqa: E402
 from launchscout.evidence import evidence_to_json, grounding_problems  # noqa: E402
+from launchscout.tools import budget_used  # noqa: E402
 
 
 def parse_args() -> tuple[BusinessBrief, str]:
@@ -84,8 +85,8 @@ def main() -> int:
         print("\nLast answer (needs review)")
         print_table(research)
 
-    tools = crew.agents[0].tools
-    record["tool_calls"] = {t.name: t.current_usage_count for t in tools}
+    # Real counts for the whole run (all attempts), from our own budget, not CrewAI's per-copy counters.
+    record["tool_calls"] = budget_used(crew.agents[0].tools[0].budget_id)
 
     out_dir = ROOT / "outputs"
     out_dir.mkdir(exist_ok=True)

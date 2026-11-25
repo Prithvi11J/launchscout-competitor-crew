@@ -22,9 +22,11 @@ def research_task(agent: Agent, guardrail) -> Task:
             "thing to {target_customer}, as an ongoing offer. They must be businesses with their own venue or "
             "brand, not individual freelancers or home tutors. Include the known competitors if they are real. "
             "For each one, find its price(s), offers, sales channels, the area of the city it serves, and when "
-            "customers can use it (schedule). Search listing sites, the businesses' own websites and their "
-            "social media posts, and use at least two different websites as sources. Open a page with the "
-            "scraper when a search snippet does not show the price.\n"
+            "customers can use it (schedule). Work in two steps: first use search (listing sites, social "
+            "posts) to find candidate businesses in {city}; then, for each candidate, find its OWN website "
+            "and open its fees, packages, classes or contact page. A business's own page is the best evidence "
+            "for its price, schedule and address, because it names the business, shows the price next to it "
+            "and usually says which city it is in. Use at least two different websites as sources.\n"
             "Separately, note any city-wide price ranges you find on listing or guide sites."
         ),
         expected_output=(
