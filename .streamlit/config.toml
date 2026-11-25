@@ -1,0 +1,40 @@
+[client]
+# "minimal" hides Streamlit's developer menu and Deploy button, so the app looks like a product.
+toolbarMode = "minimal"
+
+# LaunchScout brand theme: navy ink (trust, research) and marigold (Indian high streets, a "go" signal).
+# Both [theme.light] and [theme.dark] are defined; viewers can switch in Settings.
+
+[theme]
+font = "'Plus Jakarta Sans':https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap, sans-serif"
+headingFont = "'Plus Jakarta Sans':https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap, sans-serif"
+baseRadius = "0.6rem"
+showSidebarBorder = false
+
+[theme.light]
+primaryColor = "#B45309"              # marigold, darkened so white button text passes contrast (5:1)
+backgroundColor = "#FBF8F3"           # warm paper
+secondaryBackgroundColor = "#F2ECE2"
+textColor = "#1B2A41"                 # navy ink
+borderColor = "#E3DACB"
+linkColor = "#1D5FA8"
+orangeColor = "#C66A14"               # closer to the logo's marigold; passes 3:1 for the large wordmark
+yellowColor = "#D9822B"
+greenColor = "#2F7A4F"
+redColor = "#B3261E"
+blueColor = "#1D5FA8"
+dataframeHeaderBackgroundColor = "#F2ECE2"
+
+[theme.dark]
+primaryColor = "#B45309"              # same marigold: white text stays readable on the buttons
+backgroundColor = "#0F1724"
+secondaryBackgroundColor = "#182235"
+textColor = "#E8ECF2"
+borderColor = "#2A3650"
+linkColor = "#7DB3F0"
+orangeColor = "#F2A541"               # brighter marigold for text on a dark surface
+yellowColor = "#F2A541"
+greenColor = "#5FBF85"
+redColor = "#F07167"
+blueColor = "#7DB3F0"
+dataframeHeaderBackgroundColor = "#182235"

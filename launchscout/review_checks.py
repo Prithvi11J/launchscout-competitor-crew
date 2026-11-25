@@ -19,6 +19,7 @@ from launchscout.schemas import CompetitorReviews, ReviewResearch
 
 MIN_REVIEWED = 3  # competitors with at least one supported like or complaint
 MIN_COMPLAINTS = 2  # complaints across the market: the raw material for finding the gap
+PARTIAL_MIN_REVIEWED = 1  # on the last attempt, accept this many reviewed competitors
 
 
 def parse_reviews(raw: str) -> ReviewResearch:
@@ -97,8 +98,10 @@ def review_problems(reviews: ReviewResearch) -> list[str]:
 class ReviewGuardrail:
     """CrewAI guardrail for the review task. Pass the bound method `guard.check` to the Task."""
 
-    def __init__(self, research_guard):
+    def __init__(self, research_guard, max_retries: int = 2):
         self.research_guard = research_guard  # holds the researched competitors once task 1 passes
+        self.max_retries = max_retries  # must match the task's guardrail_max_retries
+        self.partial = False
         self.evidence: list[Evidence] = []
         self.attempts: list[dict] = []
         self.last_reviews: ReviewResearch | None = None
@@ -121,6 +124,12 @@ class ReviewGuardrail:
         value, repairs = repair_reviews(parsed, self.evidence, names)
         self.last_reviews = value
         problems = review_problems(value)
+        # Partial outcome, as for prices: small businesses often have no Google listing. On the last
+        # attempt, pass with at least one reviewed competitor; the report lists who has no reviews.
+        reviewed = sum(1 for c in value.competitors if c.likes or c.complaints)
+        if problems and len(self.attempts) >= self.max_retries and reviewed >= PARTIAL_MIN_REVIEWED:
+            self.partial = True
+            problems = []
         if problems:
             empty = [c.competitor for c in value.competitors if not (c.likes or c.complaints)]
             feedback = (

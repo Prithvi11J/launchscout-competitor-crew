@@ -66,6 +66,9 @@ def assemble_report(brief, research, reviews, strategy, plan: LaunchPlan, partia
             out.append(f"- **{name}:** {point.point}. *\"{point.quote}\"* {src.ref(point.source_url)}")
     if not any_complaint:
         out.append("- No recent complaints were found in Google reviews.")
+    unreviewed = [name for name, r in review_by_name.items() if not (r.likes or r.complaints)]
+    if unreviewed:
+        out += ["", f"*No recent Google reviews found for: {', '.join(unreviewed)}.*"]
     out.append("")
 
     out += [f"## 3. {SECTIONS[2]}", "", strategy.market_gap, "", f"*Evidence: {', '.join(strategy.gap_evidence)}.*", ""]

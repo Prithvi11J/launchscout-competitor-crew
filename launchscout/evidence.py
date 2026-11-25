@@ -36,6 +36,7 @@ class Evidence:
     kind: str  # "search" or "page"
     raw_url: str = ""  # as the agent saw it, for putting back into the report
     subject: str = ""  # for "review" and "place" units: the business the lookup was for
+    raw: str = ""  # original wording (search results, reviews), shown in the evidence trail
 
 
 def normalize_url(url: str) -> str:
@@ -59,7 +60,8 @@ def _search_units(content: str) -> list[Evidence]:
     for item in data.get("organic", []) if isinstance(data, dict) else []:
         text = f"{item.get('title', '')} {item.get('snippet', '')}"
         link = item.get("link", "")
-        units.append(Evidence(normalize_url(link), normalize_text(text), "search", link))
+        raw = f"{item.get('title', '')} - {item.get('snippet', '')}".strip(" -")
+        units.append(Evidence(normalize_url(link), normalize_text(text), "search", link, raw=raw))
     return units
 
 
@@ -73,8 +75,10 @@ def _review_units(content: str) -> list[Evidence]:
         return []
     link, subject = data["link"], data["business_name"]
     place = f"{data.get('listing_name', '')} {data.get('address', '')} rating {data.get('rating')} from {data.get('rating_count')}"
-    units = [Evidence(normalize_url(link), normalize_text(place), "place", link, subject)]
-    units += [Evidence(normalize_url(link), normalize_text(r["text"]), "review", link, subject) for r in data.get("reviews", [])]
+    shown = f"{data.get('listing_name', '')}, {data.get('address', '')}: {data.get('rating')} stars from {data.get('rating_count')} Google ratings"
+    units = [Evidence(normalize_url(link), normalize_text(place), "place", link, subject, raw=shown)]
+    units += [Evidence(normalize_url(link), normalize_text(r["text"]), "review", link, subject,
+                       raw=f"{r.get('stars')} stars, {r.get('date')}: {r['text']}") for r in data.get("reviews", [])]
     return units
 
 

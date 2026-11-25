@@ -130,3 +130,15 @@ def test_two_agent_crew_wiring(monkeypatch):
     assert [a.role for a in crew.agents] == ["Market Researcher", "Review Analyst"]
     assert crew.tasks[1].context == [crew.tasks[0]]
     assert [t.name for t in crew.agents[1].tools] == ["Google reviews"]
+
+
+def test_review_partial_on_last_attempt_with_one_reviewed():
+    research_guard = SimpleNamespace(last_research=SimpleNamespace(competitors=[SimpleNamespace(name=n) for n in NAMES]))
+    guard = ReviewGuardrail(research_guard)
+    answer = json.dumps({"competitors": [entry("Dance and Dance Studio", complaints=[point("Dingy studio and ill mannered staff")])]})
+    results = [guard.check(SimpleNamespace(raw=answer, messages=[]))[0] for _ in range(3)]
+    assert results == [False, False, False]  # no evidence collected: nothing reviewed, never partial
+    guard = ReviewGuardrail(research_guard)
+    guard.evidence = list(EVIDENCE)
+    results = [guard.check(SimpleNamespace(raw=answer, messages=[]))[0] for _ in range(3)]
+    assert results == [False, False, True] and guard.partial

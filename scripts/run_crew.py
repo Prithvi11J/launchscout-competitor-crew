@@ -27,6 +27,7 @@ from launchscout.matrix import build_matrix, matrix_markdown  # noqa: E402
 from launchscout.schemas import MarketResearch, ReviewResearch, StrategyAnalysis  # noqa: E402
 from launchscout.tasks import REPORT_FILE  # noqa: E402
 from launchscout.tools import budget_used  # noqa: E402
+from launchscout.trail import build_trail  # noqa: E402
 
 STAGES = 4
 
@@ -64,6 +65,7 @@ def main() -> int:
     p.add_argument("--customer", default=DEMO_BRIEF.target_customer)
     p.add_argument("--label", default="")
     p.add_argument("--from", dest="from_file", help="Saved research_*.json or crew_*.json to reuse")
+    p.add_argument("--save-demo", help="Also save the report and evidence trail as demo/<name>.json for the app")
     a = p.parse_args()
 
     full = build_crew(BusinessBrief(idea=a.idea, city=a.city, target_customer=a.customer), stages=STAGES)
@@ -87,6 +89,7 @@ def main() -> int:
     record["strategy"] = strategy.model_dump() if strategy else None
     record["matrix"] = build_matrix(research, reviews) if research else None
     record["partial"] = research_guard.partial
+    record["trail"] = build_trail(research, reviews, research_guard.evidence, review_guard.evidence) if research else []
     record["plan"] = report_guard.last_plan.model_dump() if report_guard.last_plan else None
     record["report_file"] = REPORT_FILE if report_guard.report else None
     record["attempts"] = {"research": research_guard.attempts, "reviews": review_guard.attempts,
@@ -109,6 +112,12 @@ def main() -> int:
         print(f"Positioning: {strategy.positioning}\nPrice: Rs {strategy.recommended_price_inr} {strategy.price_unit} - {strategy.price_reason}")
     if record["report_file"]:
         print(f"\nReport saved to {REPORT_FILE}")
+    if a.save_demo and report_guard.report:
+        demo = {"brief": record["brief"], "report": report_guard.report, "trail": record["trail"],
+                "partial": record["partial"], "seconds": record["seconds"], "tool_calls": record["tool_calls"]}
+        demo_path = ROOT / "demo" / f"{a.save_demo}.json"
+        demo_path.write_text(json.dumps(demo, indent=2, ensure_ascii=False), encoding="utf-8")
+        print(f"Example saved to {demo_path.relative_to(ROOT)}")
     if record["status"] != "ok":
         print(f"\n{record['error']}")
     print(f"\nSaved {path.relative_to(ROOT)}")

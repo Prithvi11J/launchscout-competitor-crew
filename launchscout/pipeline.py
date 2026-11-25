@@ -10,6 +10,13 @@ from launchscout import progress
 from launchscout.brief import BusinessBrief
 from launchscout.crew import build_crew
 from launchscout.matrix import build_matrix
+from launchscout.tools import budget_used
+from launchscout.trail import build_trail
+
+
+def used(crew, kind: str) -> int:
+    return sum(budget_used(a.tools[0].budget_id).get(kind, 0) for a in getattr(crew, "agents", []) if a.tools)
+
 
 AGENTS = ["Market Researcher", "Review Analyst", "Strategy Analyst", "Report Writer"]
 
@@ -33,7 +40,11 @@ def run_crew(brief: BusinessBrief, sink=None) -> dict:
         progress.set_sink(None)
 
     research, reviews = guards[0].last_research, guards[1].last_reviews
+    trail = build_trail(research, reviews, guards[0].evidence, guards[1].evidence) if research else []
     return {
+        "trail": trail,
+        "stats": {"searches": used(crew, "searches"), "page_reads": used(crew, "page_reads"),
+                  "review_lookups": used(crew, "review_lookups")},
         "status": status,
         "error": error,
         "seconds": round(time.perf_counter() - started, 1),
