@@ -252,3 +252,23 @@ def test_joining_fee_alone_does_not_count_as_priced():
     data["competitors"][0]["prices"][0]["unit"] = "joining fee"
     problems = find_problems(MarketResearch.model_validate(data))
     assert any("not just a joining fee" in p for p in problems)
+
+
+def test_retry_is_steered_away_from_dead_ends_across_attempts():
+    guard = ResearchGuardrail(DEMO_BRIEF, judge=fake_judge())
+    first = research(competitor("Priced A"), competitor("Priced B"), competitor("Silent C", priced=False))
+    ok, feedback = guard.check(output_for(first))
+    assert not ok
+    assert "Silent C: no published price" in feedback and "Keep the priced ones (Priced A, Priced B)" in feedback
+
+    second = research(competitor("Priced A"), competitor("Priced B"), competitor("Silent D", priced=False))
+    ok, feedback = guard.check(output_for(second))
+    assert not ok and "Silent C" in feedback and "Silent D" in feedback  # remembered from attempt 1
+
+
+def test_no_steering_when_enough_prices():
+    guard = ResearchGuardrail(DEMO_BRIEF, judge=fake_judge())
+    data = good_answer()
+    data["competitors"][0]["name"] = data["competitors"][1]["name"]  # duplicate: fails for another reason
+    ok, feedback = guard.check(output_for(data))
+    assert not ok and "Already checked" not in feedback

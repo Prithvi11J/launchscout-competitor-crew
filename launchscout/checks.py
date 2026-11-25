@@ -54,6 +54,11 @@ def _looks_like_listing_site(name: str) -> bool:
     return any(site == squashed or squashed.startswith(site) for site in LISTING_SITES)
 
 
+def has_class_price(c) -> bool:
+    """A joining fee alone doesn't tell a founder what the service costs, so it doesn't count."""
+    return c.price_status == "published" and any(p.unit != "joining fee" for p in c.prices)
+
+
 def find_problems(research: MarketResearch) -> list[str]:
     """Everything that breaks the brief's rules, as plain sentences the agent can act on."""
     problems: list[str] = []
@@ -97,8 +102,7 @@ def find_problems(research: MarketResearch) -> list[str]:
                 f"{MAX_FROM_ONE_SITE} may rely on one website; confirm others from a second source or find different ones."
             )
 
-    # A joining fee alone doesn't tell a founder what the service costs, so it doesn't count.
-    priced = [c for c in comps if c.price_status == "published" and any(p.unit != "joining fee" for p in c.prices)]
+    priced = [c for c in comps if has_class_price(c)]
     if len(priced) < MIN_PRICED:
         problems.append(
             f"At least {MIN_PRICED} competitors need a published price (not just a joining fee) with its source page; "
@@ -174,6 +178,7 @@ class ResearchGuardrail:
         self.evidence: list[Evidence] = []
         self.attempts: list[dict] = []  # which check stopped each attempt, for the run record
         self.last_research: MarketResearch | None = None  # kept so a failed run still has an answer to review
+        self.dead_ends: dict[str, str] = {}  # businesses checked without a usable price, across attempts
 
     def _collect(self, messages) -> None:
         known = {(e.url, e.text) for e in self.evidence}
@@ -181,6 +186,32 @@ class ResearchGuardrail:
             if (unit.url, unit.text) not in known:
                 known.add((unit.url, unit.text))
                 self.evidence.append(unit)
+
+    def _steering(self, repaired: MarketResearch, parsed: MarketResearch) -> str:
+        """Point a retry at NEW businesses when prices are short.
+
+        Seen in real runs: told only "find more priced competitors", the agent went back to
+        the same studios and searched them again. Naming the dead ends (studios checked with
+        no usable published price, across all attempts) sends the remaining budget elsewhere.
+        """
+        kept = {c.name for c in repaired.competitors}
+        priced = [c.name for c in repaired.competitors if has_class_price(c)]
+        if len(priced) >= MIN_PRICED:
+            return ""
+        for c in repaired.competitors:
+            if not has_class_price(c):
+                self.dead_ends.setdefault(c.name, "no published price found on any page you saw")
+        for c in parsed.competitors:
+            if c.name not in kept:
+                self.dead_ends.setdefault(c.name, "no page you saw supports it")
+        lines = "\n- ".join(f"{name}: {why}" for name, why in self.dead_ends.items() if name not in priced)
+        keep = ", ".join(priced) or "none yet"
+        return (
+            f"\nAlready checked, do not spend searches on these again:\n- {lines}\n"
+            f"Keep the priced ones ({keep}). Use your remaining searches to find NEW businesses in "
+            f"{self.brief.city} that publish prices, for example on their own fees or packages page. "
+            f"You may list up to {MAX_COMPETITORS} competitors."
+        )
 
     def check(self, task_output: Any) -> tuple[bool, Any]:
         self._collect(getattr(task_output, "messages", None))
@@ -200,6 +231,7 @@ class ResearchGuardrail:
             feedback = "Fix these problems and answer again:\n- " + "\n- ".join(problems)
             if repairs:
                 feedback += "\nCode already removed or corrected these claims, which no page you saw supports:\n- " + "\n- ".join(repairs)
+            feedback += self._steering(value, parsed)
             self.attempts.append({"stopped_by": "rules after repair", "feedback": feedback, "repairs": repairs})
             return False, feedback
 
