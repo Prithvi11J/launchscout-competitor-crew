@@ -77,3 +77,12 @@ class CompetitorReviews(BaseModel):
 
 class ReviewResearch(BaseModel):
     competitors: list[CompetitorReviews]
+
+
+class StrategyAnalysis(BaseModel):
+    market_gap: str = Field(description="2 to 3 sentences: the one opportunity no competitor serves well today")
+    gap_evidence: list[str] = Field(description="Names of the competitors whose prices, schedules or reviews show this gap")
+    positioning: str = Field(description="One line a founder could put on a poster, including the price")
+    recommended_price_inr: int = Field(description="Launch price in rupees, as a whole number")
+    price_unit: PriceUnit
+    price_reason: str = Field(description="1 to 2 sentences comparing the price with competitors' prices")

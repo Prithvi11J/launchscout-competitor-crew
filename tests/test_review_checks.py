@@ -126,7 +126,7 @@ def test_two_agent_crew_wiring(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test-not-real")
     from launchscout.crew import build_crew
 
-    crew = build_crew(DEMO_BRIEF, with_reviews=True)
+    crew = build_crew(DEMO_BRIEF, stages=2)
     assert [a.role for a in crew.agents] == ["Market Researcher", "Review Analyst"]
     assert crew.tasks[1].context == [crew.tasks[0]]
     assert [t.name for t in crew.agents[1].tools] == ["Google reviews"]

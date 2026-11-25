@@ -1,9 +1,10 @@
-"""Run the crew built so far (Stage 2: Market Researcher -> Review Analyst).
+"""Run the crew built so far: Market Researcher -> Review Analyst -> Strategy Analyst.
 
-    .venv\\Scripts\\python scripts/run_crew.py                      # demo brief (Chennai)
-    .venv\\Scripts\\python scripts/run_crew.py --city Coimbatore --label cbe
+    .venv\\Scripts\\python scripts/run_crew.py                         # full run, demo brief (Chennai)
+    .venv\\Scripts\\python scripts/run_crew.py --from outputs/crew_x.json   # reuse saved stages (saves credits)
 
-Saves outputs/crew_<time>.json with each task's checked output, problems and costs.
+--from accepts a research_*.json (reuses research) or a crew_*.json (reuses research and
+reviews), so a later stage can be tested without paying for the earlier ones again.
 """
 
 import argparse
@@ -21,27 +22,34 @@ from crewai import Crew  # noqa: E402
 from crewai.tasks.task_output import TaskOutput  # noqa: E402
 
 from launchscout.brief import DEMO_BRIEF, BusinessBrief  # noqa: E402
-from launchscout.schemas import MarketResearch  # noqa: E402
 from launchscout.crew import build_crew  # noqa: E402
-from launchscout.evidence import evidence_to_json  # noqa: E402
+from launchscout.matrix import build_matrix, matrix_markdown  # noqa: E402
+from launchscout.schemas import MarketResearch, ReviewResearch  # noqa: E402
 from launchscout.tools import budget_used  # noqa: E402
 
+STAGES = 3
 
-def reuse_saved_research(crew: Crew, path: Path) -> Crew:
-    """Give the research task a saved, checked answer and run only the later tasks.
+
+def guards(crew_tasks):
+    return [t.guardrail.__self__ for t in crew_tasks]
+
+
+def reuse_saved(full: Crew, path: Path) -> Crew:
+    """Give finished tasks their saved, checked answers and run only the rest.
 
     CrewAI reads a context task's `.output`; a context task outside the crew is allowed.
     """
     saved = json.loads(path.read_text(encoding="utf-8"))
-    research = MarketResearch.model_validate(saved["research"])
-    research_task, *later = crew.tasks
-    research_guard = research_task.guardrail.__self__
+    research_guard, review_guard, _ = guards(full.tasks)
     research_guard.brief = BusinessBrief.model_validate(saved["brief"])
-    research_guard.last_research = research
-    research_task.output = TaskOutput(
-        description=research_task.description, raw=research.model_dump_json(), pydantic=research, agent="Market Researcher"
-    )
-    return Crew(agents=crew.agents[1:], tasks=later, process=crew.process, verbose=True, tracing=False)
+    research_guard.last_research = MarketResearch.model_validate(saved["research"])
+    full.tasks[0].output = TaskOutput(description="research", raw=research_guard.last_research.model_dump_json(), agent="Market Researcher")
+    done = 1
+    if saved.get("reviews"):
+        review_guard.last_reviews = ReviewResearch.model_validate(saved["reviews"])
+        full.tasks[1].output = TaskOutput(description="reviews", raw=review_guard.last_reviews.model_dump_json(), agent="Review Analyst")
+        done = 2
+    return Crew(agents=full.agents[done:], tasks=full.tasks[done:], process=full.process, verbose=True, tracing=False)
 
 
 def main() -> int:
@@ -50,13 +58,14 @@ def main() -> int:
     p.add_argument("--city", default=DEMO_BRIEF.city)
     p.add_argument("--customer", default=DEMO_BRIEF.target_customer)
     p.add_argument("--label", default="")
-    p.add_argument("--research-from", help="Saved research_*.json: skip the researcher and review its answer (saves credits)")
+    p.add_argument("--from", dest="from_file", help="Saved research_*.json or crew_*.json to reuse")
     a = p.parse_args()
 
-    crew = build_crew(BusinessBrief(idea=a.idea, city=a.city, target_customer=a.customer), with_reviews=True)
-    if a.research_from:
-        crew = reuse_saved_research(crew, Path(a.research_from))
-    brief = crew.tasks[-1].guardrail.__self__.research_guard.brief
+    full = build_crew(BusinessBrief(idea=a.idea, city=a.city, target_customer=a.customer), stages=STAGES)
+    research_guard, review_guard, strategy_guard = guards(full.tasks)
+    crew = reuse_saved(full, Path(a.from_file)) if a.from_file else full
+    brief = research_guard.brief
+
     started = time.perf_counter()
     record = {"brief": brief.model_dump(), "started_at": datetime.now().isoformat(timespec="seconds")}
     try:
@@ -67,33 +76,30 @@ def main() -> int:
         record.update(status="needs_review", error=f"{type(err).__name__}: {str(err)[:400]}")
     record["seconds"] = round(time.perf_counter() - started, 1)
 
-    review_guard = crew.tasks[-1].guardrail.__self__
-    research_guard = review_guard.research_guard
-    record["research"] = research_guard.last_research.model_dump() if research_guard.last_research else None
-    record["reviews"] = review_guard.last_reviews.model_dump() if review_guard.last_reviews else None
-    record["attempts"] = {"research": research_guard.attempts, "reviews": review_guard.attempts}
-    record["tool_calls"] = {
-        agent.role: budget_used(agent.tools[0].budget_id) for agent in crew.agents
-    }
+    research, reviews, strategy = research_guard.last_research, review_guard.last_reviews, strategy_guard.last_strategy
+    record["research"] = research.model_dump() if research else None
+    record["reviews"] = reviews.model_dump() if reviews else None
+    record["strategy"] = strategy.model_dump() if strategy else None
+    record["matrix"] = build_matrix(research, reviews) if research else None
+    record["attempts"] = {"research": research_guard.attempts, "reviews": review_guard.attempts, "strategy": strategy_guard.attempts}
+    record["tool_calls"] = {ag.role: budget_used(ag.tools[0].budget_id) for ag in crew.agents if ag.tools}
 
     out = ROOT / "outputs"
     out.mkdir(exist_ok=True)
-    tag = f"_{a.label}" if a.label else ""
-    path = out / f"crew_{datetime.now():%Y%m%d_%H%M%S}{tag}.json"
+    path = out / f"crew_{datetime.now():%Y%m%d_%H%M%S}{'_' + a.label if a.label else ''}.json"
     path.write_text(json.dumps(record, indent=2, ensure_ascii=False), encoding="utf-8")
-    path.with_name(path.stem + "_review_evidence.json").write_text(
-        json.dumps(evidence_to_json(review_guard.evidence), ensure_ascii=False), encoding="utf-8"
-    )
 
     print(f"\nStatus: {record['status']} ({record['seconds']} s)  tools: {record['tool_calls']}")
     for stage, attempts in record["attempts"].items():
-        print(f"{stage}: " + ", ".join(a["stopped_by"] or "passed" for a in attempts))
-    for c in (record["reviews"] or {}).get("competitors", []):
-        rating = f"{c['rating']} ({c['rating_count']})" if c["rating"] else "-"
-        print(f"\n{c['competitor']}  rating {rating}")
-        for kind in ("likes", "complaints"):
-            for point in c[kind]:
-                print(f"  {'+' if kind == 'likes' else '-'} {point['point']}  \"{point['quote']}\"  <{point['source_url'][:60]}>")
+        if attempts:
+            print(f"{stage}: " + ", ".join(x["stopped_by"] or "passed" for x in attempts))
+    if record["matrix"]:
+        print("\n" + matrix_markdown(record["matrix"]))
+    if strategy:
+        print(f"\nGap: {strategy.market_gap}\nEvidence: {', '.join(strategy.gap_evidence)}")
+        print(f"Positioning: {strategy.positioning}\nPrice: Rs {strategy.recommended_price_inr} {strategy.price_unit} - {strategy.price_reason}")
+    if record["status"] != "ok":
+        print(f"\n{record['error']}")
     print(f"\nSaved {path.relative_to(ROOT)}")
     return 0 if record["status"] == "ok" else 1
 

@@ -4,29 +4,39 @@ Process.sequential: tasks run in order, and a task listed in another's
 `context` hands its (checked) output to it, like a team passing work along.
 A crew is built per brief because the checks need the founder's city and
 target customer; agent and task text still use {placeholders}, filled at kickoff.
+
+stages: 1 = research, 2 = + reviews, 3 = + strategy.
 """
 
 from crewai import Crew, Process
 
-from launchscout.agents import market_researcher, review_analyst
+from launchscout.agents import market_researcher, review_analyst, strategy_analyst
 from launchscout.brief import BusinessBrief
 from launchscout.checks import ResearchGuardrail, llm_fit_judge
 from launchscout.config import get_llm
 from launchscout.review_checks import ReviewGuardrail
-from launchscout.tasks import research_task, review_task
+from launchscout.strategy_checks import StrategyGuardrail
+from launchscout.tasks import research_task, review_task, strategy_task
 
 
-def build_crew(brief: BusinessBrief, llm=None, tools=None, judge=llm_fit_judge, with_reviews: bool = False) -> Crew:
+def build_crew(brief: BusinessBrief, llm=None, tools=None, judge=llm_fit_judge, stages: int = 1) -> Crew:
     llm = llm or get_llm()
     researcher = market_researcher(llm=llm, tools=tools)
     research_guard = ResearchGuardrail(brief, llm=llm, judge=judge)
     research = research_task(researcher, research_guard.check)
     agents, tasks = [researcher], [research]
 
-    if with_reviews:
+    if stages >= 2:
         analyst = review_analyst(llm=llm, tools=tools)
+        review_guard = ReviewGuardrail(research_guard)
+        reviews = review_task(analyst, review_guard.check, research)
         agents.append(analyst)
-        tasks.append(review_task(analyst, ReviewGuardrail(research_guard).check, research))
+        tasks.append(reviews)
+
+    if stages >= 3:
+        strategist = strategy_analyst(llm=llm)
+        agents.append(strategist)
+        tasks.append(strategy_task(strategist, StrategyGuardrail(research_guard, review_guard).check, research, reviews))
 
     return Crew(
         agents=agents,

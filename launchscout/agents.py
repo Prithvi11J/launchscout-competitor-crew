@@ -65,3 +65,24 @@ def review_analyst(llm=None, tools=None) -> Agent:
         allow_delegation=False,
         verbose=True,
     )
+
+
+def strategy_analyst(llm=None) -> Agent:
+    return Agent(
+        role="Strategy Analyst",
+        goal=(
+            "Using only the research and reviews of competitors in {city}, find the one gap no competitor serves "
+            "well for {target_customer}, and recommend a positioning and launch price for: {idea}."
+        ),
+        backstory=(
+            "You advise first-time founders. You compare competitors on price, schedule and what customers "
+            "complain about, and you look for one specific, testable gap rather than generic ideas such as "
+            "'better quality'. You use no outside facts: every number you mention is a price, rating or count "
+            "from the research, and you price against what competitors actually charge."
+        ),
+        tools=[],  # reasons over the first two agents' work only
+        llm=llm or get_llm(),
+        max_iter=5,
+        allow_delegation=False,
+        verbose=True,
+    )

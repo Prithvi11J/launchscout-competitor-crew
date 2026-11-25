@@ -8,7 +8,7 @@ that format in code.
 
 from crewai import Agent, Task
 
-from launchscout.schemas import MarketResearch, ReviewResearch
+from launchscout.schemas import MarketResearch, ReviewResearch, StrategyAnalysis
 
 
 def research_task(agent: Agent, guardrail) -> Task:
@@ -66,6 +66,30 @@ def review_task(agent: Agent, guardrail, research: Task) -> Task:
         agent=agent,
         context=[research],
         output_pydantic=ReviewResearch,
+        guardrail=guardrail,
+        guardrail_max_retries=2,
+    )
+
+
+def strategy_task(agent: Agent, guardrail, research: Task, reviews: Task) -> Task:
+    return Task(
+        description=(
+            "Your context holds the checked competitor research (prices, schedules, channels) and customer "
+            "reviews for {city}. The founder plans: {idea}, for {target_customer}.\n"
+            "Compare the competitors. Find the single biggest gap: something the target customer wants that "
+            "no competitor offers well, shown by prices, schedules, missing published prices, or repeated "
+            "complaints. Then recommend a positioning line and a launch price."
+        ),
+        expected_output=(
+            "One JSON object with: market_gap (2 to 3 sentences), gap_evidence (list of competitor names, "
+            "exactly as in the research, whose data shows the gap), positioning (one poster-style line that "
+            "includes the price), recommended_price_inr (whole number), price_unit ('per month', 'per class', "
+            "'per hour', 'per course' or 'other') and price_reason (1 to 2 sentences comparing with competitors' "
+            "real prices). Mention no number that is not in the research or reviews, except your own price."
+        ),
+        agent=agent,
+        context=[research, reviews],
+        output_pydantic=StrategyAnalysis,
         guardrail=guardrail,
         guardrail_max_retries=2,
     )
