@@ -18,6 +18,9 @@ load_dotenv()
 # Privacy default: no usage telemetry leaves this machine unless you opt in.
 os.environ.setdefault("CREWAI_DISABLE_TELEMETRY", "true")
 os.environ.setdefault("OTEL_SDK_DISABLED", "true")
+# Separate from telemetry: CrewAI also offers to upload a run trace (and asks
+# "Share this execution trace?" on the first run). We never want that.
+os.environ.setdefault("CREWAI_TRACING_ENABLED", "false")
 
 DEFAULT_MODEL = "gpt-5.4-mini"
 
