@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 
 from pydantic import ValidationError
 
+from launchscout.evidence import GENERIC_WORDS, Evidence, extract_evidence, normalize_text, repair_claims
 from launchscout.schemas import FitVerdict, MarketResearch
 
 MIN_COMPETITORS = 3
@@ -145,10 +146,13 @@ def llm_fit_judge(brief, research: MarketResearch, llm) -> FitVerdict:
 
 
 class ResearchGuardrail:
-    """One guardrail that runs both checks, cheapest first.
+    """One guardrail that runs every check, cheapest first.
 
-    1. Code rules (free, exact): format, prices, URLs, source variety.
-    2. Fit judge (one small LLM call): does each business really compete for THIS customer?
+    1. Evidence repair (free): drop sources that never name the business, move a price to
+       the page that really shows it, drop prices no page supports. Evidence is collected
+       from every attempt, because a retry may not repeat the searches it already did.
+    2. Code rules on what is left (free, exact): counts, prices, URLs, source variety, duplicates.
+    3. Fit judge (one small LLM call): does each business really compete for THIS customer?
        Code can't judge "a Bharatanatyam diploma school vs after-work Bollywood"; a model can,
        as long as it sees the founder's brief, which CrewAI's built-in text guardrail never does.
 
@@ -164,22 +168,71 @@ class ResearchGuardrail:
         self.llm = llm
         self.judge = judge
         self.verdicts: list[FitVerdict] = []  # one per attempt that reached the fit check
+        self.evidence: list[Evidence] = []
+        self.attempts: list[dict] = []  # which check stopped each attempt, for the run record
+        self.last_research: MarketResearch | None = None  # kept so a failed run still has an answer to review
+
+    def _collect(self, messages) -> None:
+        known = {(e.url, e.text) for e in self.evidence}
+        for unit in extract_evidence(messages):
+            if (unit.url, unit.text) not in known:
+                known.add((unit.url, unit.text))
+                self.evidence.append(unit)
 
     def check(self, task_output: Any) -> tuple[bool, Any]:
-        ok, value = research_guardrail(task_output)
-        if not ok:
-            return ok, value
+        self._collect(getattr(task_output, "messages", None))
+        try:
+            parsed = parse_research(task_output.raw)
+        except (json.JSONDecodeError, ValueError, ValidationError) as err:
+            feedback = f"Your answer must be one JSON object matching the MarketResearch schema. Error: {err}"
+            self.attempts.append({"stopped_by": "format", "feedback": feedback, "repairs": []})
+            return False, feedback
+
+        # Repair first, then judge what is left: unsupported claims are removed in code,
+        # so the agent is only sent back when the remaining answer needs more research.
+        value, repairs = repair_claims(parsed, self.evidence)
+        self.last_research = value
+        problems = find_problems(value) + duplicate_problems(value)
+        if problems:
+            feedback = "Fix these problems and answer again:\n- " + "\n- ".join(problems)
+            if repairs:
+                feedback += "\nCode already removed or corrected these claims, which no page you saw supports:\n- " + "\n- ".join(repairs)
+            self.attempts.append({"stopped_by": "rules after repair", "feedback": feedback, "repairs": repairs})
+            return False, feedback
 
         verdict = self.judge(self.brief, value, self.llm)
         self.verdicts.append(verdict)
         rejected = [j for j in verdict.judgements if not j.direct_competitor]
         if rejected:
             listed = "\n- ".join(f"{j.name}: {j.reason}" for j in rejected)
+            self.attempts.append({"stopped_by": "fit check", "feedback": listed, "repairs": repairs})
             return False, (
                 f"These are not direct competitors for '{self.brief.target_customer}' and must be replaced "
                 f"by businesses that are (keep the other rules):\n- {listed}"
             )
-        return True, value
+        self.attempts.append({"stopped_by": None, "feedback": "passed", "repairs": repairs})
+        return True, drop_duplicate_prices(value)
+
+
+def _distinctive_words(name: str) -> frozenset[str]:
+    return frozenset(w for w in normalize_text(name).split() if w not in GENERIC_WORDS)
+
+
+def duplicate_problems(research: MarketResearch) -> list[str]:
+    """The same business listed twice under two names (seen: 'Dance Studio Chennai' and
+    'Chennai Dance and Dance Studio' with identical prices) inflates the competitor count."""
+    problems = []
+    comps = research.competitors
+    for i, a in enumerate(comps):
+        for b in comps[i + 1 :]:
+            same_words = bool(_distinctive_words(a.name)) and _distinctive_words(a.name) == _distinctive_words(b.name)
+            prices_a = sorted((p.amount_inr, p.unit) for p in a.prices)
+            same_prices = len(prices_a) >= 2 and prices_a == sorted((p.amount_inr, p.unit) for p in b.prices)
+            if same_words or same_prices:
+                problems.append(
+                    f"'{a.name}' and '{b.name}' look like the same business. List it once and find another competitor."
+                )
+    return problems
 
 
 def drop_duplicate_prices(research: MarketResearch) -> MarketResearch:
@@ -197,22 +250,3 @@ def drop_duplicate_prices(research: MarketResearch) -> MarketResearch:
                 unique.append(p)
         c.prices = unique
     return research
-
-
-def urls_seen_in_tool_results(messages: list[dict] | None) -> set[str]:
-    """Every URL that appeared in text the agent received, so we can tell found links from invented ones."""
-    seen: set[str] = set()
-    for message in messages or []:
-        if message.get("role") == "assistant":
-            continue  # the agent's own words prove nothing
-        content = message.get("content")
-        text = content if isinstance(content, str) else json.dumps(content, default=str)
-        seen.update(u.rstrip("/.,)'\"") for u in re.findall(r"https?://[^\s'\"<>\]\\]+", text))
-    return seen
-
-
-def unverified_urls(research: MarketResearch, seen: set[str]) -> list[str]:
-    """Source URLs the agent cites that never appeared in a search or scrape result."""
-    cited = {u for c in research.competitors for u in c.source_urls}
-    cited |= {p.source_url for c in research.competitors for p in c.prices}
-    return sorted(u for u in cited if u.rstrip("/") not in seen)

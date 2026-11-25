@@ -20,8 +20,9 @@ sys.path.insert(0, str(ROOT))
 sys.stdout.reconfigure(encoding="utf-8")  # Windows consoles otherwise crash on the rupee sign
 
 from launchscout.brief import DEMO_BRIEF, BusinessBrief  # noqa: E402
-from launchscout.checks import find_problems, unverified_urls, urls_seen_in_tool_results  # noqa: E402
+from launchscout.checks import duplicate_problems, find_problems  # noqa: E402
 from launchscout.crew import build_crew  # noqa: E402
+from launchscout.evidence import evidence_to_json, grounding_problems  # noqa: E402
 
 
 def parse_args() -> tuple[BusinessBrief, str]:
@@ -63,19 +64,24 @@ def main() -> int:
     record["guardrail_retries"] = task.retry_count
     guard = task.guardrail.__self__  # the ResearchGuardrail behind the bound method
     record["fit_verdicts"] = [v.model_dump() for v in guard.verdicts]
+    record["guardrail_attempts"] = guard.attempts
+    record["evidence_units"] = len(guard.evidence)
 
     if result is not None:
         research = result.pydantic
-        task_output = result.tasks_output[0]
-        seen = urls_seen_in_tool_results(task_output.messages)
         record.update(
             status="ok",
             research=research.model_dump(),
-            problems=find_problems(research),
-            unverified_urls=unverified_urls(research, seen),
-            urls_seen=len(seen),
+            problems=find_problems(research) + duplicate_problems(research) + grounding_problems(research, guard.evidence),
             token_usage=result.token_usage.model_dump(),
         )
+        print_table(research)
+    elif guard.last_research is not None:
+        # The checks gave up, but the last answer is still worth a human look: save it with its problems.
+        research = guard.last_research
+        record["research"] = research.model_dump()
+        record["problems"] = find_problems(research) + duplicate_problems(research) + grounding_problems(research, guard.evidence)
+        print("\nLast answer (needs review)")
         print_table(research)
 
     tools = crew.agents[0].tools
@@ -86,18 +92,27 @@ def main() -> int:
     tag = f"_{label}" if label else ""
     path = out_dir / f"research_{datetime.now():%Y%m%d_%H%M%S}{tag}.json"
     path.write_text(json.dumps(record, indent=2, ensure_ascii=False), encoding="utf-8")
+    # Raw evidence lets scripts/replay_checks.py re-run every code check later for free.
+    evidence_path = path.with_name(path.stem + "_evidence.json")
+    evidence_path.write_text(json.dumps(evidence_to_json(guard.evidence), ensure_ascii=False), encoding="utf-8")
 
     print(f"\nStatus          : {record['status']}  ({record['seconds']} s, guardrail retries: {record['guardrail_retries']})")
     print(f"Tool calls      : {record['tool_calls']}")
     for i, verdict in enumerate(record["fit_verdicts"], 1):
         rejected = [j["name"] for j in verdict["judgements"] if not j["direct_competitor"]]
         print(f"Fit check #{i}    : rejected {rejected or 'none'}")
+    for i, attempt in enumerate(record["guardrail_attempts"], 1):
+        print(f"Attempt {i}       : stopped by {attempt['stopped_by'] or 'nothing (passed)'}")
+        for repair in attempt.get("repairs", []):
+            print(f"   repaired     : {repair}")
+    print(f"Evidence units  : {record['evidence_units']} search results and pages")
     if result is not None:
         usage = record["token_usage"]
         print(f"Tokens          : {usage.get('prompt_tokens')} in / {usage.get('completion_tokens')} out")
-        print(f"URLs in results : {record['urls_seen']} seen; cited but never seen: {record['unverified_urls'] or 'none'}")
+        print(f"Open problems   : {record['problems'] or 'none'}")
     else:
-        print(f"Error           : {record['error']}")
+        print(f"Error           : {record['error'][:300]}")
+        print(f"Open problems   : {record.get('problems') or 'no answer to review'}")
     print(f"Saved           : {path.relative_to(ROOT)}")
     return 0 if record["status"] == "ok" else 1
 
