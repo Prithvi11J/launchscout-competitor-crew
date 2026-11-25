@@ -35,6 +35,7 @@ class Evidence:
     text: str  # normalised: lower case, punctuation removed except commas inside numbers
     kind: str  # "search" or "page"
     raw_url: str = ""  # as the agent saw it, for putting back into the report
+    subject: str = ""  # for "review" and "place" units: the business the lookup was for
 
 
 def normalize_url(url: str) -> str:
@@ -62,6 +63,21 @@ def _search_units(content: str) -> list[Evidence]:
     return units
 
 
+def _review_units(content: str) -> list[Evidence]:
+    """Google reviews tool output: one "place" unit (rating, address) and one unit per review."""
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError:
+        return []
+    if not data.get("found"):
+        return []
+    link, subject = data["link"], data["business_name"]
+    place = f"{data.get('listing_name', '')} {data.get('address', '')} rating {data.get('rating')} from {data.get('rating_count')}"
+    units = [Evidence(normalize_url(link), normalize_text(place), "place", link, subject)]
+    units += [Evidence(normalize_url(link), normalize_text(r["text"]), "review", link, subject) for r in data.get("reviews", [])]
+    return units
+
+
 def extract_evidence(messages: list[dict] | None) -> list[Evidence]:
     """Turn an agent's message history into evidence units."""
     calls: dict[str, dict] = {}
@@ -78,7 +94,9 @@ def extract_evidence(messages: list[dict] | None) -> list[Evidence]:
         content, args = m["content"], calls.get(m.get("tool_call_id", ""), {})
         if "usage limit" in content[:200].lower() or content.startswith("Tool refusal:"):
             continue  # a tool refusing to run is not evidence about the page it was asked for
-        if "website_url" in args:
+        if "business_name" in args:
+            units.extend(_review_units(content))
+        elif "website_url" in args:
             page = content.removeprefix(SCRAPE_PREFIX)
             url = args["website_url"]
             units.append(Evidence(normalize_url(url), normalize_text(page), "page", url))

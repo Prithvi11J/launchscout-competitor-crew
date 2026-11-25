@@ -8,7 +8,7 @@ where we put judgement: what counts as a competitor, what to distrust.
 from crewai import Agent
 
 from launchscout.config import get_llm
-from launchscout.tools import new_budget, research_tools
+from launchscout.tools import new_budget, research_tools, review_tools
 
 
 def market_researcher(llm=None, tools=None) -> Agent:
@@ -42,10 +42,6 @@ def market_researcher(llm=None, tools=None) -> Agent:
     )
 
 
-REVIEW_SEARCHES = 12  # reviews mostly come from search snippets (Justdial, Google), so fewer page reads
-REVIEW_PAGE_READS = 4
-
-
 def review_analyst(llm=None, tools=None) -> Agent:
     return Agent(
         role="Review Analyst",
@@ -56,12 +52,14 @@ def review_analyst(llm=None, tools=None) -> Agent:
         backstory=(
             "You read customer reviews for a living and you know they are noisy. You look for patterns a "
             "founder can act on (timings, crowding, teaching quality, price, cleanliness, follow-up) rather "
-            "than one-off comments. You only report what a customer actually wrote: every point carries a "
-            "short quote copied word for word from a search result or page that names the business, and "
-            "you leave a competitor empty rather than guess. Ratings come only from a page that shows them "
-            "next to the business's name."
+            "than one-off comments. You only report what a customer actually wrote in a review: every point "
+            "carries a short quote copied word for word from a Google review, and you leave a competitor "
+            "empty rather than guess. A business's own posts and listing descriptions are marketing, not reviews. "
+            "Skip reviews that are not about the service itself (a shop in the same building, a payment "
+            "dispute at a counter), and say when a point comes from a different customer group than the "
+            "target customer (for example a parent of a child, when the founder targets working adults)."
         ),
-        tools=tools if tools is not None else research_tools(new_budget(), REVIEW_SEARCHES, REVIEW_PAGE_READS),
+        tools=tools if tools is not None else review_tools(new_budget()),
         llm=llm or get_llm(),
         max_iter=20,
         allow_delegation=False,

@@ -52,16 +52,16 @@ def review_task(agent: Agent, guardrail, research: Task) -> Task:
         description=(
             "The Market Researcher's answer (in your context) lists competitors in {city} for this idea: {idea}. "
             "Target customer: {target_customer}.\n"
-            "For EACH competitor in that list, search for customer reviews (for example '<name> {city} reviews', "
-            "its Justdial or Google listing, or posts where customers talk about it). Report what customers like "
-            "and what they complain about, and the average rating if a listing shows one."
+            "For EACH competitor in that list, use the Google reviews tool (its name and {city}). From the "
+            "reviews it returns, report what customers like and what they complain about, and the listing's "
+            "rating and number of ratings. Look for repeated themes, especially in the low-star reviews."
         ),
         expected_output=(
             "One JSON object with key competitors: one item per researched competitor, using exactly the same "
             "names. Each has competitor, rating (number or null), rating_count (number or null), "
             "rating_source_url, likes and complaints. Each like or complaint has point (your one-line summary), "
-            "quote (5 to 25 words copied exactly from the search result or page) and source_url (where the "
-            "quote appears). At least 3 competitors need a like or complaint, and at least 2 complaints in total."
+            "quote (5 to 25 words copied exactly from one Google review) and source_url (the listing link the "
+            "tool returned; also use it as rating_source_url). At least 3 competitors need a like or complaint, and at least 2 complaints in total."
         ),
         agent=agent,
         context=[research],

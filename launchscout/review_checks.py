@@ -2,8 +2,9 @@
 
 Same pattern as the research checks: repair in code first (drop what no evidence
 supports), then send the agent back only if what is left breaks a rule.
-A review point is supported when its quote appears word for word in a search
-result or page from its source URL, and that result or URL names the business.
+A review point is supported only when its quote appears word for word in a Google
+review of that business (from the Google reviews tool). Quotes from listing
+descriptions or a business's own pages are marketing, not customers.
 """
 
 import json
@@ -12,16 +13,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from launchscout.evidence import (
-    AFTER,
-    BEFORE,
-    Evidence,
-    extract_evidence,
-    mention_positions,
-    names_business,
-    normalize_text,
-    normalize_url,
-)
+from launchscout.evidence import Evidence, extract_evidence, normalize_text, normalize_url
 from launchscout.schemas import CompetitorReviews, ReviewResearch
 
 MIN_REVIEWED = 3  # competitors with at least one supported like or complaint
@@ -38,32 +30,25 @@ def parse_reviews(raw: str) -> ReviewResearch:
     return ReviewResearch.model_validate(json.loads(text))
 
 
-def _url_names(url: str, name: str) -> bool:
-    """justdial.com/chennai/dance-and-dance-studio-greams-road names the studio in its address."""
-    return bool(mention_positions(normalize_text(url.replace("/", " ").replace("-", " ")), name))
-
-
-def _units_for(evidence: list[Evidence], url: str, name: str) -> list[Evidence]:
-    key = normalize_url(url or "")
-    return [e for e in evidence if e.url == key and (names_business(e, name) or _url_names(e.url, name))]
+def _units(evidence: list[Evidence], name: str, kind: str) -> list[Evidence]:
+    """Review or place units from the Google reviews tool, looked up for this business."""
+    key = normalize_text(name)
+    return [e for e in evidence if e.kind == kind and normalize_text(e.subject) == key]
 
 
 def point_supported(point, name: str, evidence: list[Evidence]) -> bool:
+    """Only a customer's review counts: not a listing description, not the business's own page."""
     quote = normalize_text(point.quote)
-    return len(quote.split()) >= 3 and any(quote in e.text for e in _units_for(evidence, point.source_url, name))
+    return len(quote.split()) >= 3 and any(
+        quote in e.text and normalize_url(point.source_url or "") == e.url for e in _units(evidence, name, "review")
+    )
 
 
 def rating_supported(c: CompetitorReviews, evidence: list[Evidence]) -> bool:
-    if c.rating is None or not c.rating_source_url:
+    if c.rating is None:
         return False
     needle = normalize_text(f"{c.rating:g}")
-    for e in _units_for(evidence, c.rating_source_url, c.competitor):
-        if _url_names(e.url, c.competitor) and re.search(rf"\b{needle}\b", e.text):
-            return True  # the business's own listing page
-        for pos in mention_positions(e.text, c.competitor):
-            if re.search(rf"\b{needle}\b", e.text[max(0, pos - BEFORE) : pos + AFTER]):
-                return True
-    return False
+    return any(re.search(rf"\brating {needle}\b", e.text) for e in _units(evidence, c.competitor, "place"))
 
 
 def repair_reviews(reviews: ReviewResearch, evidence: list[Evidence], competitor_names: list[str]):
@@ -84,10 +69,10 @@ def repair_reviews(reviews: ReviewResearch, evidence: list[Evidence], competitor
                 if point_supported(p, c.competitor, evidence):
                     good.append(p)
                 else:
-                    notes.append(f"Removed {field[:-1]} '{p.point}' for '{c.competitor}': quote not found on {p.source_url}.")
+                    notes.append(f"Removed {field[:-1]} '{p.point}' for '{c.competitor}': not a quote from its Google reviews.")
             setattr(c, field, good)
         if c.rating is not None and not rating_supported(c, evidence):
-            notes.append(f"Removed rating {c.rating} for '{c.competitor}': not shown next to the business on its source.")
+            notes.append(f"Removed rating {c.rating} for '{c.competitor}': not the rating on its Google listing.")
             c.rating = c.rating_count = c.rating_source_url = None
         kept[c.competitor] = c
     for name in competitor_names:
@@ -139,9 +124,8 @@ class ReviewGuardrail:
             empty = [c.competitor for c in value.competitors if not (c.likes or c.complaints)]
             feedback = (
                 "Fix these problems and answer again:\n- " + "\n- ".join(problems)
-                + "\nEvery like and complaint needs a quote copied word for word from a search result or page "
-                "that names the business. Search for reviews of: " + ", ".join(empty)
-                + " (for example '<name> <city> reviews' or the business's Justdial or Google listing)."
+                + "\nEvery like and complaint needs a quote copied word for word from a Google review returned by "
+                "the Google reviews tool, with that listing's link as source_url. Look up: " + ", ".join(empty) + "."
             )
             if repairs:
                 feedback += "\nCode already removed these unsupported claims:\n- " + "\n- ".join(repairs)

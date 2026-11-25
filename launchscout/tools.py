@@ -41,7 +41,8 @@ def budget_used(budget_id: str) -> dict[str, int]:
 
 
 def _take(budget_id: str, kind: str, limit: int) -> bool:
-    used = _USED.setdefault(budget_id, {"searches": 0, "page_reads": 0})
+    used = _USED.setdefault(budget_id, {})
+    used.setdefault(kind, 0)
     if used[kind] >= limit:
         return False
     used[kind] += 1
@@ -96,3 +97,113 @@ def research_tools(budget_id: str, searches: int = SEARCHES_PER_RUN, page_reads:
         BudgetedSearch(n_results=8, country="in", budget_id=budget_id, limit=searches),
         BusinessPageReader(budget_id=budget_id, limit=page_reads),
     ]
+
+
+# --- Google reviews via Serper's Maps endpoints ------------------------------------------
+# One lookup = /maps (3 credits) + /reviews most relevant (1) + /reviews lowest rated (1).
+REVIEW_LOOKUPS_PER_RUN = 6
+REVIEW_MAX_AGE_YEARS = 3  # a complaint from 2018 says little about the studio today
+REVIEW_MIN_WORDS = 5  # drops empty reviews and spam such as a lone name or phone number
+MATCH_THRESHOLD = 0.7
+
+import json as _json  # noqa: E402
+import os as _os  # noqa: E402
+import urllib.request as _request  # noqa: E402
+from datetime import datetime as _datetime, timezone as _timezone  # noqa: E402
+from difflib import SequenceMatcher as _SequenceMatcher  # noqa: E402
+
+from crewai.tools import BaseTool  # noqa: E402
+from pydantic import BaseModel as _BaseModel, Field as _Field  # noqa: E402
+
+from launchscout.evidence import CITY_ALIASES, GENERIC_WORDS, normalize_text  # noqa: E402
+
+
+class _ReviewArgs(_BaseModel):
+    business_name: str = _Field(description="Exact competitor name from the research")
+    city: str = _Field(description="The founder's city")
+
+
+def _serper(path: str, body: dict) -> dict:
+    request = _request.Request(
+        f"https://google.serper.dev/{path}",
+        data=_json.dumps(body).encode(),
+        headers={"X-API-KEY": _os.environ.get("SERPER_API_KEY", ""), "Content-Type": "application/json"},
+    )
+    with _request.urlopen(request, timeout=30) as response:
+        return _json.load(response)
+
+
+def _core(name: str) -> str:
+    """Name without leading 'the' and trailing type words: 'Dance and Dance Studio' -> 'dance and dance'."""
+    words = normalize_text(name).split()
+    while words and words[0] == "the":
+        words.pop(0)
+    while len(words) > 1 and words[-1] in GENERIC_WORDS:
+        words.pop()
+    return " ".join(words)
+
+
+def pick_place(places: list[dict], name: str, city: str) -> dict | None:
+    """Code, not the model, decides which Maps result is the competitor: in the city, closest name."""
+    city_words = [normalize_text(city), *CITY_ALIASES.get(normalize_text(city), [])]
+    best, best_score = None, 0.0
+    for place in places:
+        address = normalize_text(place.get("address", ""))
+        if not any(c in address for c in city_words):
+            continue
+        score = _SequenceMatcher(None, _core(name), _core(place.get("title", ""))).ratio()
+        if score > best_score:
+            best, best_score = place, score
+    return best if best_score >= MATCH_THRESHOLD else None
+
+
+def _recent_and_real(review: dict, now: _datetime) -> bool:
+    if len((review.get("snippet") or "").split()) < REVIEW_MIN_WORDS:
+        return False
+    try:
+        written = _datetime.fromisoformat(review["isoDate"].replace("Z", "+00:00"))
+    except (KeyError, ValueError):
+        return False
+    return (now - written).days <= REVIEW_MAX_AGE_YEARS * 365
+
+
+class GoogleReviewsTool(BaseTool):
+    """Look up a business on Google Maps and return its rating, address and recent reviews."""
+
+    name: str = "Google reviews"
+    description: str = (
+        "Give a business name and city. Returns its Google Maps listing (name, address, rating, number of "
+        "ratings, link) and recent customer reviews, including the lowest-rated ones. Quote reviews from here."
+    )
+    args_schema: type[_BaseModel] = _ReviewArgs
+    budget_id: str = "unbudgeted"
+    limit: int = REVIEW_LOOKUPS_PER_RUN
+
+    def _run(self, business_name: str, city: str) -> str:
+        if not _take(self.budget_id, "review_lookups", self.limit):
+            return f"{REFUSAL_PREFIX} the review-lookup budget for this run ({self.limit}) is used up."
+        place = pick_place(_serper("maps", {"q": f"{business_name} {city}", "gl": "in"}).get("places", []), business_name, city)
+        if place is None:
+            return _json.dumps({"business_name": business_name, "found": False,
+                                "note": f"No Google Maps listing in {city} matches this name."})
+        now = _datetime.now(_timezone.utc)
+        reviews, seen = [], set()
+        for sort in ("mostRelevant", "lowestRating"):
+            for review in _serper("reviews", {"cid": place["cid"], "gl": "in", "sortBy": sort}).get("reviews", []):
+                if review.get("id") not in seen and _recent_and_real(review, now):
+                    seen.add(review.get("id"))
+                    reviews.append({"stars": review.get("rating"), "date": review.get("date"), "text": review["snippet"]})
+        return _json.dumps({
+            "business_name": business_name,
+            "found": True,
+            "listing_name": place.get("title"),
+            "address": place.get("address"),
+            "rating": place.get("rating"),
+            "rating_count": place.get("ratingCount"),
+            "link": f"https://maps.google.com/?cid={place['cid']}",
+            "reviews": reviews,
+        }, ensure_ascii=False)
+
+
+def review_tools(budget_id: str) -> list:
+    return [GoogleReviewsTool(budget_id=budget_id)]
