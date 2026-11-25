@@ -150,3 +150,10 @@ def test_google_redirect_is_not_a_source_even_if_it_names_the_business():
     unit = Evidence(normalize_url(goto), normalize_text("Kiki's Dance Studio adults batch monthly fees just 1500"), "search", goto)
     fixed, notes = repair_claims(one("Kiki's Dance Studio", [(1500, goto)], [goto]), [unit])
     assert fixed.competitors == [] and any("redirect" in n for n in notes)
+
+
+def test_all_generic_name_does_not_match_any_dance_text():
+    """Regression: 'Dance and Dance Studio' used to shrink to 'dance' and match every page."""
+    text = normalize_text("Adult freestyle dance, Anna Salai, Chennai. Bollywood dance and hip hop classes. Fee just 400")
+    assert mention_positions(text, "Dance and Dance Studio") == []
+    assert mention_positions(normalize_text("Dance and Dance Studio, Greams Road"), "Dance and Dance Studio")

@@ -6,7 +6,7 @@ Serper search costs a credit, so this is the budget line, not a nicety.
 
 from crewai_tools import ScrapeWebsiteTool, SerperDevTool
 
-SEARCHES_PER_AGENT = 8
+SEARCHES_PER_AGENT = 12  # raised from 8: strict sourcing removes redirect-only finds, so it must search more
 SCRAPES_PER_AGENT = 4
 
 

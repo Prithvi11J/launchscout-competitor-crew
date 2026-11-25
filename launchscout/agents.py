@@ -25,14 +25,17 @@ def market_researcher(llm=None, tools=None) -> Agent:
             "business's price. You never invent a price: if a business only says 'fees on enquiry', you "
             "record that. A direct competitor sells the same kind of thing to the same kind of customer on "
             "an ongoing basis; a business in a different style or category, one that mainly serves a "
-            "different audience, or a one-off event is not, even if it shows up in the same search. You "
+            "different audience, a one-off event, or an individual freelancer or home tutor (a person, not "
+            "a business with its own venue or brand) is not, even if it shows up in the same search. You "
             "spread your research across several sources instead of copying one listing page, you prefer "
             "the business's own pages and recent posts, and you keep the exact URL of every page you take "
-            "a fact from."
+            "a fact from. A google.com/goto redirect link is not a source a founder can open: when a "
+            "useful result comes as one, search again for that business's own website, Instagram post "
+            "or listing page and cite that instead."
         ),
         tools=tools if tools is not None else [web_search(), page_reader()],
         llm=llm or get_llm(),
-        max_iter=15,  # thinking + tool steps before it must answer; bounds time and cost
+        max_iter=22,  # thinking + tool steps before it must answer; must exceed the 12 + 4 tool budget
         allow_delegation=False,
         verbose=True,  # print the agent's reasoning and tool calls while it runs
     )

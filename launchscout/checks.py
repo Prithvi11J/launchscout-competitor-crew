@@ -97,11 +97,12 @@ def find_problems(research: MarketResearch) -> list[str]:
                 f"{MAX_FROM_ONE_SITE} may rely on one website; confirm others from a second source or find different ones."
             )
 
-    priced = [c for c in comps if c.price_status == "published" and c.prices]
+    # A joining fee alone doesn't tell a founder what the service costs, so it doesn't count.
+    priced = [c for c in comps if c.price_status == "published" and any(p.unit != "joining fee" for p in c.prices)]
     if len(priced) < MIN_PRICED:
         problems.append(
-            f"At least {MIN_PRICED} competitors need a published price with its source page; only {len(priced)} have one. "
-            "Search for more competitors or for their fee pages, Instagram posts or listing pages."
+            f"At least {MIN_PRICED} competitors need a published price (not just a joining fee) with its source page; "
+            f"only {len(priced)} have one. Search for more competitors or for their fee pages, Instagram posts or listing pages."
         )
     return problems
 
@@ -126,7 +127,9 @@ Target customer: {target_customer}
 For each business below, decide whether it is a DIRECT competitor: it sells the same kind of
 product or service, to roughly the same customer, as an ongoing offer in that city.
 Not direct: mainly a different category or style, mainly a different audience (for example only
-children when the target is adults), a one-off event or workshop, a listing site, or outside the city.
+children when the target is adults), a one-off event or workshop, a listing site, outside the city,
+or an individual freelancer or home tutor (a person teaching on their own rather than a business
+with its own venue or brand).
 Judge only from the facts given. If the facts are thin but plausible, count it as direct.
 
 Businesses:

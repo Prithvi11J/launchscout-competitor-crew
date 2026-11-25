@@ -44,7 +44,8 @@ def normalize_url(url: str) -> str:
 
 
 def normalize_text(text: str) -> str:
-    text = text.lower().replace("&", " and ")
+    # Apostrophes vanish rather than becoming spaces: "Sandy's" and "Sandys" must match.
+    text = re.sub(r"['’`]", "", text.lower()).replace("&", " and ")
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9,]+", " ", text)).strip()
 
 
@@ -92,8 +93,11 @@ def _name_candidates(name: str) -> list[str]:
     trimmed = list(words)
     while len(trimmed) > 1 and trimmed[-1] in GENERIC_WORDS:
         trimmed.pop()
-    candidates.append(" ".join(trimmed))
     distinctive = [w for w in words if w not in GENERIC_WORDS and len(w) >= 3]
+    # A shortened name must keep a distinctive word. Bug found by hand: "Dance and Dance Studio"
+    # shrank to just "dance", which matched every dance page on the internet.
+    if any(w not in GENERIC_WORDS for w in trimmed):
+        candidates.append(" ".join(trimmed))
     if distinctive:
         candidates.append(max(distinctive, key=len))
     return [c for c in dict.fromkeys(candidates) if c]

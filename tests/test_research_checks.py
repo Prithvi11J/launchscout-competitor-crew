@@ -224,3 +224,31 @@ def test_different_studios_are_not_duplicates():
     from launchscout.checks import duplicate_problems
 
     assert duplicate_problems(MarketResearch.model_validate(good_answer())) == []
+
+
+def test_freelancers_are_excluded_everywhere_the_model_reads_rules(monkeypatch):
+    """Product rule (decided 2026-11-25): competitors are businesses, not individual tutors."""
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test-not-real")
+    from launchscout.checks import FIT_PROMPT
+    from launchscout.crew import build_crew
+
+    crew = build_crew(DEMO_BRIEF, tools=[])
+    assert "freelancer" in FIT_PROMPT
+    assert "freelancer" in crew.agents[0].backstory
+    assert "freelancers" in crew.tasks[0].description
+
+
+def test_apostrophe_spelling_is_still_a_duplicate():
+    from launchscout.checks import duplicate_problems
+
+    data = good_answer()
+    data["competitors"][0]["name"] = "Sandys Dance Studio"
+    data["competitors"][1]["name"] = "Sandy's Dance Studio"
+    assert duplicate_problems(MarketResearch.model_validate(data))
+
+
+def test_joining_fee_alone_does_not_count_as_priced():
+    data = good_answer()
+    data["competitors"][0]["prices"][0]["unit"] = "joining fee"
+    problems = find_problems(MarketResearch.model_validate(data))
+    assert any("not just a joining fee" in p for p in problems)
