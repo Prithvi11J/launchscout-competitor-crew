@@ -1,0 +1,6 @@
+# Top-level dependencies, pinned so the project installs the same way everywhere.
+# Python 3.12 (newer Python versions often break AI libraries).
+crewai[tools]==1.15.44     # agents, tasks, crews + CrewAI's own LLM wrapper
+crewai-tools==1.15.44      # SerperDevTool, ScrapeWebsiteTool, FileWriterTool
+python-dotenv==1.2.4       # reads .env into environment variables
+pytest==9.2.0              # offline tests
