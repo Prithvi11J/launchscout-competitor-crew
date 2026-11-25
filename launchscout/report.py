@@ -12,6 +12,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from launchscout.matrix import build_matrix
+from launchscout.progress import emit
 from launchscout.schemas import LaunchPlan
 from launchscout.strategy_checks import _numbers, known_numbers
 
@@ -131,7 +132,9 @@ class ReportGuardrail:
         if problems:
             feedback = "Fix these problems and answer again:\n- " + "\n- ".join(problems)
             self.attempts.append({"stopped_by": "rules", "feedback": feedback})
+            emit("Report Writer", f"Sent back: {problems[0]}")
             return False, feedback
         self.report = assemble_report(brief, research, reviews, strategy, plan)
         self.attempts.append({"stopped_by": None, "feedback": "passed"})
+        emit("Report Writer", "Report written: 6 sections with numbered sources")
         return True, self.report

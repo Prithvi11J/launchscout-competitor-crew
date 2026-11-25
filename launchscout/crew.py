@@ -20,7 +20,7 @@ from launchscout.strategy_checks import StrategyGuardrail
 from launchscout.tasks import report_task, research_task, review_task, strategy_task
 
 
-def build_crew(brief: BusinessBrief, llm=None, tools=None, judge=llm_fit_judge, stages: int = 4) -> Crew:
+def build_crew(brief: BusinessBrief, llm=None, tools=None, judge=llm_fit_judge, stages: int = 4, task_callback=None) -> Crew:
     llm = llm or get_llm()
     researcher = market_researcher(llm=llm, tools=tools)
     research_guard = ResearchGuardrail(brief, llm=llm, judge=judge)
@@ -53,4 +53,5 @@ def build_crew(brief: BusinessBrief, llm=None, tools=None, judge=llm_fit_judge, 
         process=Process.sequential,
         verbose=True,
         tracing=False,  # never upload run traces to CrewAI
+        task_callback=task_callback,  # called after each task: the app uses it to move to the next agent
     )

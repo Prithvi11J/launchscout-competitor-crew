@@ -14,6 +14,8 @@ from urllib.parse import urlparse
 
 from crewai_tools import ScrapeWebsiteTool, SerperDevTool
 
+from launchscout.progress import emit
+
 SEARCHES_PER_RUN = 24  # whole run, including guardrail retries: at most 24 Serper credits (16 left retries with none)
 PAGE_READS_PER_RUN = 12
 
@@ -60,6 +62,7 @@ class BudgetedSearch(SerperDevTool):
     def _run(self, **kwargs: Any) -> Any:
         if not _take(self.budget_id, "searches", self.limit):
             return f"{REFUSAL_PREFIX} the search budget for this run ({self.limit}) is used up. Answer with what you have."
+        emit("Market Researcher", f"Searching the web: {kwargs.get('search_query', '')}")
         return super()._run(**kwargs)
 
 
@@ -88,6 +91,7 @@ class BusinessPageReader(ScrapeWebsiteTool):
             )
         if not _take(self.budget_id, "page_reads", self.limit):
             return f"{REFUSAL_PREFIX} the page-read budget for this run ({self.limit}) is used up. Answer with what you have."
+        emit("Market Researcher", f"Reading {_domain(url)}")
         return super()._run(**kwargs)
 
 
@@ -182,6 +186,7 @@ class GoogleReviewsTool(BaseTool):
     def _run(self, business_name: str, city: str) -> str:
         if not _take(self.budget_id, "review_lookups", self.limit):
             return f"{REFUSAL_PREFIX} the review-lookup budget for this run ({self.limit}) is used up."
+        emit("Review Analyst", f"Reading Google reviews: {business_name}")
         place = pick_place(_serper("maps", {"q": f"{business_name} {city}", "gl": "in"}).get("places", []), business_name, city)
         if place is None:
             return _json.dumps({"business_name": business_name, "found": False,

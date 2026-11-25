@@ -14,6 +14,7 @@ from pydantic import ValidationError
 
 from launchscout.evidence import normalize_text
 from launchscout.matrix import build_matrix
+from launchscout.progress import emit
 from launchscout.schemas import StrategyAnalysis
 
 SMALL_NUMBER = 31  # times (7 pm), days, class counts and percentages are fine without a source
@@ -96,6 +97,8 @@ class StrategyGuardrail:
         if problems:
             feedback = "Fix these problems and answer again:\n- " + "\n- ".join(problems)
             self.attempts.append({"stopped_by": "rules", "feedback": feedback})
+            emit("Strategy Analyst", f"Sent back: {problems[0]}")
             return False, feedback
         self.attempts.append({"stopped_by": None, "feedback": "passed"})
+        emit("Strategy Analyst", f"Gap found; launch price Rs {strategy.recommended_price_inr:,} {strategy.price_unit}")
         return True, strategy

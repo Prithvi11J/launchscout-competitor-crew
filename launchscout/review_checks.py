@@ -14,6 +14,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from launchscout.evidence import Evidence, extract_evidence, normalize_text, normalize_url
+from launchscout.progress import emit
 from launchscout.schemas import CompetitorReviews, ReviewResearch
 
 MIN_REVIEWED = 3  # competitors with at least one supported like or complaint
@@ -130,6 +131,10 @@ class ReviewGuardrail:
             if repairs:
                 feedback += "\nCode already removed these unsupported claims:\n- " + "\n- ".join(repairs)
             self.attempts.append({"stopped_by": "rules after repair", "feedback": feedback, "repairs": repairs})
+            emit("Review Analyst", f"Sent back to dig further: {problems[0]}")
             return False, feedback
         self.attempts.append({"stopped_by": None, "feedback": "passed", "repairs": repairs})
+        likes = sum(len(c.likes) for c in value.competitors)
+        complaints = sum(len(c.complaints) for c in value.competitors)
+        emit("Review Analyst", f"Found {likes} things customers like and {complaints} complaints")
         return True, value

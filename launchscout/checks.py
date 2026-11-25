@@ -14,6 +14,7 @@ from urllib.parse import urlparse
 from pydantic import ValidationError
 
 from launchscout.evidence import GENERIC_WORDS, Evidence, extract_evidence, normalize_text, repair_claims
+from launchscout.progress import emit
 from launchscout.schemas import FitVerdict, MarketResearch
 
 MIN_COMPETITORS = 3
@@ -233,6 +234,7 @@ class ResearchGuardrail:
                 feedback += "\nCode already removed or corrected these claims, which no page you saw supports:\n- " + "\n- ".join(repairs)
             feedback += self._steering(value, parsed)
             self.attempts.append({"stopped_by": "rules after repair", "feedback": feedback, "repairs": repairs})
+            emit("Market Researcher", f"Sent back to dig further: {problems[0]}")
             return False, feedback
 
         verdict = self.judge(self.brief, value, self.llm)
@@ -241,11 +243,14 @@ class ResearchGuardrail:
         if rejected:
             listed = "\n- ".join(f"{j.name}: {j.reason}" for j in rejected)
             self.attempts.append({"stopped_by": "fit check", "feedback": listed, "repairs": repairs})
+            emit("Market Researcher", f"Sent back: {len(rejected)} not direct competitors")
             return False, (
                 f"These are not direct competitors for '{self.brief.target_customer}' and must be replaced "
                 f"by businesses that are (keep the other rules):\n- {listed}"
             )
         self.attempts.append({"stopped_by": None, "feedback": "passed", "repairs": repairs})
+        priced = sum(1 for c in value.competitors if has_class_price(c))
+        emit("Market Researcher", f"Confirmed {len(value.competitors)} competitors, {priced} with published prices")
         return True, drop_duplicate_prices(value)
 
 
