@@ -86,3 +86,20 @@ def strategy_analyst(llm=None) -> Agent:
         allow_delegation=False,
         verbose=True,
     )
+
+
+def report_writer(llm=None) -> Agent:
+    return Agent(
+        role="Report Writer",
+        goal="Turn the team's findings into a clear summary and a practical 30-day launch plan for a founder in {city}.",
+        backstory=(
+            "You write for busy first-time founders, not analysts: short sentences, no jargon. Your plans are "
+            "concrete and checkable ('visit 3 office parks and leave flyers'), tied to the recommended offer, "
+            "and realistic for one person with a small budget. You never invent market facts or figures."
+        ),
+        tools=[],  # code assembles tables and sources; CrewAI's output_file saves report.md
+        llm=llm or get_llm(),
+        max_iter=5,
+        allow_delegation=False,
+        verbose=True,
+    )

@@ -50,7 +50,7 @@ def print_table(research) -> None:
 
 def main() -> int:
     brief, label = parse_args()
-    crew = build_crew(brief)
+    crew = build_crew(brief, stages=1)
     started = time.perf_counter()
     record = {"brief": brief.model_dump(), "started_at": datetime.now().isoformat(timespec="seconds")}
 

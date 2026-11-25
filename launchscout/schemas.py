@@ -86,3 +86,14 @@ class StrategyAnalysis(BaseModel):
     recommended_price_inr: int = Field(description="Launch price in rupees, as a whole number")
     price_unit: PriceUnit
     price_reason: str = Field(description="1 to 2 sentences comparing the price with competitors' prices")
+
+
+class WeekPlan(BaseModel):
+    week: int = Field(description="1, 2, 3 or 4")
+    focus: str = Field(description="The week's goal in a few words, e.g. 'Book a studio and trial batch'")
+    actions: list[str] = Field(description="2 to 4 concrete, checkable actions for the founder")
+
+
+class LaunchPlan(BaseModel):
+    summary: str = Field(description="2 to 3 plain sentences for the founder: who to beat, the gap, the offer")
+    weeks: list[WeekPlan] = Field(description="Exactly 4 weeks, in order")

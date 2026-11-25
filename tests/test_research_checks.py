@@ -109,7 +109,7 @@ def test_crew_wiring_without_api(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test-not-real")
     from launchscout.crew import build_crew
 
-    crew = build_crew(DEMO_BRIEF, tools=[])
+    crew = build_crew(DEMO_BRIEF, tools=[], stages=1)
     task = crew.tasks[0]
     assert [a.role for a in crew.agents] == ["Market Researcher"]
     assert task.output_pydantic is MarketResearch
@@ -181,7 +181,7 @@ def test_guardrail_runs_through_crewai_own_code_path(monkeypatch):
 
     from launchscout.crew import build_crew
 
-    crew = build_crew(DEMO_BRIEF, tools=[], judge=fake_judge())
+    crew = build_crew(DEMO_BRIEF, tools=[], judge=fake_judge(), stages=1)
     task = crew.tasks[0]
     output = TaskOutput(description=task.description, raw=json.dumps(good_answer()), agent="Market Researcher",
                         messages=search_messages(good_answer()))
@@ -232,7 +232,7 @@ def test_freelancers_are_excluded_everywhere_the_model_reads_rules(monkeypatch):
     from launchscout.checks import FIT_PROMPT
     from launchscout.crew import build_crew
 
-    crew = build_crew(DEMO_BRIEF, tools=[])
+    crew = build_crew(DEMO_BRIEF, tools=[], stages=1)
     assert "freelancer" in FIT_PROMPT
     assert "freelancer" in crew.agents[0].backstory
     assert "freelancers" in crew.tasks[0].description

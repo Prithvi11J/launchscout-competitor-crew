@@ -1,4 +1,4 @@
-"""Run the crew built so far: Market Researcher -> Review Analyst -> Strategy Analyst.
+"""Run the full crew: Market Researcher -> Review Analyst -> Strategy Analyst -> Report Writer.
 
     .venv\\Scripts\\python scripts/run_crew.py                         # full run, demo brief (Chennai)
     .venv\\Scripts\\python scripts/run_crew.py --from outputs/crew_x.json   # reuse saved stages (saves credits)
@@ -24,10 +24,11 @@ from crewai.tasks.task_output import TaskOutput  # noqa: E402
 from launchscout.brief import DEMO_BRIEF, BusinessBrief  # noqa: E402
 from launchscout.crew import build_crew  # noqa: E402
 from launchscout.matrix import build_matrix, matrix_markdown  # noqa: E402
-from launchscout.schemas import MarketResearch, ReviewResearch  # noqa: E402
+from launchscout.schemas import MarketResearch, ReviewResearch, StrategyAnalysis  # noqa: E402
+from launchscout.tasks import REPORT_FILE  # noqa: E402
 from launchscout.tools import budget_used  # noqa: E402
 
-STAGES = 3
+STAGES = 4
 
 
 def guards(crew_tasks):
@@ -40,7 +41,7 @@ def reuse_saved(full: Crew, path: Path) -> Crew:
     CrewAI reads a context task's `.output`; a context task outside the crew is allowed.
     """
     saved = json.loads(path.read_text(encoding="utf-8"))
-    research_guard, review_guard, _ = guards(full.tasks)
+    research_guard, review_guard, strategy_guard, _ = guards(full.tasks)
     research_guard.brief = BusinessBrief.model_validate(saved["brief"])
     research_guard.last_research = MarketResearch.model_validate(saved["research"])
     full.tasks[0].output = TaskOutput(description="research", raw=research_guard.last_research.model_dump_json(), agent="Market Researcher")
@@ -49,6 +50,10 @@ def reuse_saved(full: Crew, path: Path) -> Crew:
         review_guard.last_reviews = ReviewResearch.model_validate(saved["reviews"])
         full.tasks[1].output = TaskOutput(description="reviews", raw=review_guard.last_reviews.model_dump_json(), agent="Review Analyst")
         done = 2
+    if saved.get("reviews") and saved.get("strategy"):
+        strategy_guard.last_strategy = StrategyAnalysis.model_validate(saved["strategy"])
+        full.tasks[2].output = TaskOutput(description="strategy", raw=strategy_guard.last_strategy.model_dump_json(), agent="Strategy Analyst")
+        done = 3
     return Crew(agents=full.agents[done:], tasks=full.tasks[done:], process=full.process, verbose=True, tracing=False)
 
 
@@ -62,7 +67,7 @@ def main() -> int:
     a = p.parse_args()
 
     full = build_crew(BusinessBrief(idea=a.idea, city=a.city, target_customer=a.customer), stages=STAGES)
-    research_guard, review_guard, strategy_guard = guards(full.tasks)
+    research_guard, review_guard, strategy_guard, report_guard = guards(full.tasks)
     crew = reuse_saved(full, Path(a.from_file)) if a.from_file else full
     brief = research_guard.brief
 
@@ -81,7 +86,10 @@ def main() -> int:
     record["reviews"] = reviews.model_dump() if reviews else None
     record["strategy"] = strategy.model_dump() if strategy else None
     record["matrix"] = build_matrix(research, reviews) if research else None
-    record["attempts"] = {"research": research_guard.attempts, "reviews": review_guard.attempts, "strategy": strategy_guard.attempts}
+    record["plan"] = report_guard.last_plan.model_dump() if report_guard.last_plan else None
+    record["report_file"] = REPORT_FILE if report_guard.report else None
+    record["attempts"] = {"research": research_guard.attempts, "reviews": review_guard.attempts,
+                          "strategy": strategy_guard.attempts, "report": report_guard.attempts}
     record["tool_calls"] = {ag.role: budget_used(ag.tools[0].budget_id) for ag in crew.agents if ag.tools}
 
     out = ROOT / "outputs"
@@ -98,6 +106,8 @@ def main() -> int:
     if strategy:
         print(f"\nGap: {strategy.market_gap}\nEvidence: {', '.join(strategy.gap_evidence)}")
         print(f"Positioning: {strategy.positioning}\nPrice: Rs {strategy.recommended_price_inr} {strategy.price_unit} - {strategy.price_reason}")
+    if record["report_file"]:
+        print(f"\nReport saved to {REPORT_FILE}")
     if record["status"] != "ok":
         print(f"\n{record['error']}")
     print(f"\nSaved {path.relative_to(ROOT)}")

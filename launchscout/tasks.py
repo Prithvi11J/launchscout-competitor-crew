@@ -93,3 +93,30 @@ def strategy_task(agent: Agent, guardrail, research: Task, reviews: Task) -> Tas
         guardrail=guardrail,
         guardrail_max_retries=2,
     )
+
+
+REPORT_FILE = "outputs/report.md"
+
+
+def report_task(agent: Agent, guardrail, research: Task, reviews: Task, strategy: Task) -> Task:
+    # No output_pydantic: the guardrail turns the plan into the full markdown report,
+    # and CrewAI saves the task's final output to output_file.
+    return Task(
+        description=(
+            "Your context holds the checked competitor research, customer reviews and the Strategy Analyst's gap, "
+            "positioning and price for: {idea} in {city}, for {target_customer}.\n"
+            "Write (1) a 2 to 3 sentence summary for the founder and (2) a 30-day launch plan, week by week, "
+            "that tests the recommended offer. Code adds the competitor table, complaints and sources."
+        ),
+        expected_output=(
+            "One JSON object with: summary (2 to 3 sentences) and weeks (exactly 4 items: week 1 to 4, each "
+            "with focus and 2 to 4 concrete actions). Use no price or figure that is not in your context; small "
+            "targets up to 100 are fine, such as 'run 2 trial classes' or 'collect 50 reviews'."
+        ),
+        agent=agent,
+        context=[research, reviews, strategy],
+        guardrail=guardrail,
+        guardrail_max_retries=2,
+        output_file=REPORT_FILE,
+        create_directory=True,
+    )
