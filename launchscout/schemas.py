@@ -58,3 +58,22 @@ class FitVerdict(BaseModel):
     """The fit judge's answer: one judgement per competitor."""
 
     judgements: list[FitJudgement]
+
+
+class ReviewPoint(BaseModel):
+    point: str = Field(description="One short sentence in your own words, e.g. 'Batches start late'")
+    quote: str = Field(description="The exact words (5 to 25) from the search result or page that show this")
+    source_url: str = Field(description="The page or search result the quote comes from")
+
+
+class CompetitorReviews(BaseModel):
+    competitor: str = Field(description="Exactly the competitor name from the research")
+    rating: float | None = Field(default=None, description="Average star rating if shown, e.g. 4.5; null if not found")
+    rating_count: int | None = Field(default=None, description="Number of ratings or reviews if shown")
+    rating_source_url: str | None = None
+    likes: list[ReviewPoint] = Field(description="What customers praise; empty if nothing found")
+    complaints: list[ReviewPoint] = Field(description="What customers complain about; empty if nothing found")
+
+
+class ReviewResearch(BaseModel):
+    competitors: list[CompetitorReviews]

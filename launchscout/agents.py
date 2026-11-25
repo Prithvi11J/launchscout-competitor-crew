@@ -40,3 +40,30 @@ def market_researcher(llm=None, tools=None) -> Agent:
         allow_delegation=False,
         verbose=True,  # print the agent's reasoning and tool calls while it runs
     )
+
+
+REVIEW_SEARCHES = 12  # reviews mostly come from search snippets (Justdial, Google), so fewer page reads
+REVIEW_PAGE_READS = 4
+
+
+def review_analyst(llm=None, tools=None) -> Agent:
+    return Agent(
+        role="Review Analyst",
+        goal=(
+            "For each competitor the Market Researcher found in {city}, find what real customers praise and "
+            "complain about, with the exact words they used and where they said it."
+        ),
+        backstory=(
+            "You read customer reviews for a living and you know they are noisy. You look for patterns a "
+            "founder can act on (timings, crowding, teaching quality, price, cleanliness, follow-up) rather "
+            "than one-off comments. You only report what a customer actually wrote: every point carries a "
+            "short quote copied word for word from a search result or page that names the business, and "
+            "you leave a competitor empty rather than guess. Ratings come only from a page that shows them "
+            "next to the business's name."
+        ),
+        tools=tools if tools is not None else research_tools(new_budget(), REVIEW_SEARCHES, REVIEW_PAGE_READS),
+        llm=llm or get_llm(),
+        max_iter=20,
+        allow_delegation=False,
+        verbose=True,
+    )

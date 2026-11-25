@@ -90,9 +90,9 @@ class BusinessPageReader(ScrapeWebsiteTool):
         return super()._run(**kwargs)
 
 
-def research_tools(budget_id: str) -> list:
+def research_tools(budget_id: str, searches: int = SEARCHES_PER_RUN, page_reads: int = PAGE_READS_PER_RUN) -> list:
     # country="in" asks Google for Indian results (prices in rupees, local listings).
     return [
-        BudgetedSearch(n_results=8, country="in", budget_id=budget_id),
-        BusinessPageReader(budget_id=budget_id),
+        BudgetedSearch(n_results=8, country="in", budget_id=budget_id, limit=searches),
+        BusinessPageReader(budget_id=budget_id, limit=page_reads),
     ]
