@@ -176,12 +176,43 @@ def citable(url: str) -> bool:
     return not normalize_url(url).startswith(NOT_CITABLE)
 
 
-def repair_claims(research, evidence: list[Evidence]):
+# Old and new names of the same city, so "Madras" on an old page still counts for Chennai.
+CITY_ALIASES = {
+    "chennai": ["madras"], "bengaluru": ["bangalore"], "mumbai": ["bombay"], "kolkata": ["calcutta"],
+    "gurugram": ["gurgaon"], "puducherry": ["pondicherry"], "thiruvananthapuram": ["trivandrum"],
+    "kochi": ["cochin"], "coimbatore": ["kovai"], "mysuru": ["mysore"], "vadodara": ["baroda"],
+}
+
+
+def place_names(city: str, locality: str) -> list[str]:
+    """Words that would place a business in the city: the city, its old names, and the
+    localities the agent claims (only if a page names the business next to them, see below)."""
+    key = normalize_text(city)
+    names = [key, *CITY_ALIASES.get(key, [])]
+    for part in re.split(r"[/,;&]| and ", locality.lower()):
+        part = normalize_text(part)
+        if len(part) >= 4 and part not in {"unknown", key, "india", "tamil nadu"}:
+            names.append(part)
+    return names
+
+
+def located_in(unit: Evidence, name: str, places: list[str]) -> bool:
+    """Does this evidence name the business AND a place in the city? A listing page's URL
+    counts too: justdial.com/chennai/... places every business it lists in Chennai."""
+    if not names_business(unit, name):
+        return False
+    haystack = f"{unit.url.replace('/', ' ').replace('-', ' ')} {unit.text}"
+    return any(re.search(rf"\b{re.escape(p)}\b", haystack) for p in places)
+
+
+def repair_claims(research, evidence: list[Evidence], city: str | None = None):
     """Fix in code what code can fix, and remove what no evidence supports.
 
     * a price shown for the business on a different page it saw: point to that page;
     * a price or a source no evidence supports: remove it;
-    * a competitor left with no supported source: remove it.
+    * a competitor left with no supported source: remove it;
+    * with a city: a competitor no page places in that city (by its name or a claimed
+      locality next to the business's name): remove it.
     Returns (repaired copy, notes). The agent is only sent back if the repaired answer
     breaks a rule (too few competitors or prices), which needs new research, not editing.
     """
@@ -221,10 +252,15 @@ def repair_claims(research, evidence: list[Evidence]):
         c.prices, c.source_urls = prices, sources
         if c.price_status == "published" and not prices:
             c.price_status = "not_found"
-        if sources:
-            kept.append(c)
-        else:
+        if not sources:
             notes.append(f"Removed '{c.name}': no page you saw names it.")
+        elif city and not any(located_in(e, c.name, place_names(city, c.locality)) for e in evidence):
+            notes.append(
+                f"Removed '{c.name}': no page you saw places it in {city} "
+                f"(neither '{city}' nor its claimed locality '{c.locality}' appears next to its name)."
+            )
+        else:
+            kept.append(c)
     research.competitors = kept
     return research, notes
 

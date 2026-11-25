@@ -139,7 +139,7 @@ Businesses:
 def llm_fit_judge(brief, research: MarketResearch, llm) -> FitVerdict:
     """Ask the LLM, with the founder's brief in hand, which competitors really compete."""
     lines = [
-        f"- {c.name}: offers {c.offering}; schedule: {c.schedule}; "
+        f"- {c.name} (locality: {c.locality}): offers {c.offering}; schedule: {c.schedule}; "
         f"prices: {', '.join(p.label for p in c.prices) or c.price_status}; claimed fit: {c.fit_reason}"
         for c in research.competitors
     ]
@@ -193,7 +193,7 @@ class ResearchGuardrail:
 
         # Repair first, then judge what is left: unsupported claims are removed in code,
         # so the agent is only sent back when the remaining answer needs more research.
-        value, repairs = repair_claims(parsed, self.evidence)
+        value, repairs = repair_claims(parsed, self.evidence, city=self.brief.city)
         self.last_research = value
         problems = find_problems(value) + duplicate_problems(value)
         if problems:

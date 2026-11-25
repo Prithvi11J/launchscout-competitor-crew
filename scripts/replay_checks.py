@@ -35,7 +35,7 @@ def main() -> int:
 
     research = MarketResearch.model_validate(record["research"])
     evidence = evidence_from_json(json.loads(evidence_path.read_text(encoding="utf-8")))
-    repaired, repairs = repair_claims(research, evidence)
+    repaired, repairs = repair_claims(research, evidence, city=record["brief"]["city"])
     problems = find_problems(repaired) + duplicate_problems(repaired)
     print(f"{path.name}: {len(research.competitors)} competitors in, {len(repaired.competitors)} after repair, "
           f"{len(evidence)} evidence units")

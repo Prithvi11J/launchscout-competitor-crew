@@ -44,7 +44,7 @@ def good_answer():
 def search_messages(answer):
     """Fake agent history: one search whose results name each competitor next to its price."""
     organic = [
-        {"title": c["name"], "link": c["source_urls"][0], "snippet": f"{c['name']} adults batch Rs 900 per month"}
+        {"title": c["name"], "link": c["source_urls"][0], "snippet": f"{c['name']} adults batch Chennai Rs 900 per month"}
         for c in answer["competitors"]
     ]
     return [

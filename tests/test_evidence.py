@@ -157,3 +157,35 @@ def test_all_generic_name_does_not_match_any_dance_text():
     text = normalize_text("Adult freestyle dance, Anna Salai, Chennai. Bollywood dance and hip hop classes. Fee just 400")
     assert mention_positions(text, "Dance and Dance Studio") == []
     assert mention_positions(normalize_text("Dance and Dance Studio, Greams Road"), "Dance and Dance Studio")
+
+
+def test_city_check_removes_business_no_page_places_in_the_city():
+    """The Zenith case: real prices on its own site, but nothing says it is in Chennai."""
+    from launchscout.evidence import repair_claims
+
+    site = "https://zenithdanceacademy.in/package/"
+    unit = page(site, "Zenith Dance Academy packages 8 classes 2,100 12 classes 3,100")
+    research = one("Zenith Dance Academy", [(2100, site)], [site])
+    kept, _ = repair_claims(research, [unit])  # no city given: kept
+    assert len(kept.competitors) == 1
+    fixed, notes = repair_claims(research, [unit], city="Chennai")
+    assert fixed.competitors == [] and "places it in Chennai" in notes[-1]
+
+
+def test_city_confirmed_by_text_url_alias_or_locality():
+    from launchscout.evidence import located_in, place_names
+
+    jd = Evidence(normalize_url("https://www.justdial.com/Chennai/Zero-6-Dance"), normalize_text("Zero 6 Dance and Fitness Company"), "search")
+    old_name = page("https://a.example.com", "Raack Academy of Dance, Kilpauk, Madras")
+    area = page("https://b.example.com", "Hips N Toez Dance Company, 5th Cross Street, Madipakkam")
+    assert located_in(jd, "Zero 6 Dance and Fitness Company", place_names("Chennai", "unknown"))  # city in the URL
+    assert located_in(old_name, "Raack Academy of Dance", place_names("Chennai", "unknown"))  # old city name
+    assert located_in(area, "Hips N Toez Dance Company", place_names("Chennai", "Madipakkam / T. Nagar"))
+    assert not located_in(area, "Hips N Toez Dance Company", place_names("Chennai", "unknown"))
+
+
+def test_city_next_to_a_different_business_does_not_count():
+    from launchscout.evidence import located_in, place_names
+
+    other = page("https://c.example.com", "Best dance classes in Chennai: Step N Tap, Leo's Dance Academy")
+    assert not located_in(other, "Zenith Dance Academy", place_names("Chennai", "unknown"))
