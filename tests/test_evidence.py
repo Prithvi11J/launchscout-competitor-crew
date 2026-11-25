@@ -189,3 +189,12 @@ def test_city_next_to_a_different_business_does_not_count():
 
     other = page("https://c.example.com", "Best dance classes in Chennai: Step N Tap, Leo's Dance Academy")
     assert not located_in(other, "Zenith Dance Academy", place_names("Chennai", "unknown"))
+
+
+def test_tool_refusal_is_not_page_evidence():
+    messages = [
+        {"role": "assistant", "content": "", "tool_calls": [
+            {"id": "p1", "function": {"name": "read", "arguments": '{"website_url": "https://x.example.com"}'}}]},
+        {"role": "tool", "tool_call_id": "p1", "content": "Tool 'read_website_content' has reached its usage limit of 4 times"},
+    ]
+    assert extract_evidence(messages) == []

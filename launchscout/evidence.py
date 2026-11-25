@@ -76,6 +76,8 @@ def extract_evidence(messages: list[dict] | None) -> list[Evidence]:
         if m.get("role") != "tool" or not isinstance(m.get("content"), str):
             continue
         content, args = m["content"], calls.get(m.get("tool_call_id", ""), {})
+        if "usage limit" in content[:200].lower():
+            continue  # a tool refusing to run is not evidence about the page it was asked for
         if "website_url" in args:
             page = content.removeprefix(SCRAPE_PREFIX)
             url = args["website_url"]
