@@ -38,6 +38,6 @@ class BusinessBrief(BaseModel):
 # The demo input used in the README, video and live demo.
 DEMO_BRIEF = BusinessBrief(
     idea="Evening and weekend dance classes (Bollywood, hip-hop, dance fitness)",
-    city="Coimbatore",
+    city="Chennai",
     target_customer="Working professionals, age 22 to 40",
 )

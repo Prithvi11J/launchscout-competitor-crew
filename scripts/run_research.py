@@ -24,28 +24,31 @@ from launchscout.checks import find_problems, unverified_urls, urls_seen_in_tool
 from launchscout.crew import build_crew  # noqa: E402
 
 
-def parse_args() -> BusinessBrief:
+def parse_args() -> tuple[BusinessBrief, str]:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--idea", default=DEMO_BRIEF.idea)
     p.add_argument("--city", default=DEMO_BRIEF.city)
     p.add_argument("--customer", default=DEMO_BRIEF.target_customer)
     p.add_argument("--known", default="", help="Comma-separated competitor names (optional)")
+    p.add_argument("--label", default="", help="Short tag added to the output file name")
     a = p.parse_args()
-    return BusinessBrief(idea=a.idea, city=a.city, target_customer=a.customer, known_competitors=a.known.split(","))
+    brief = BusinessBrief(idea=a.idea, city=a.city, target_customer=a.customer, known_competitors=a.known.split(","))
+    return brief, a.label
 
 
 def print_table(research) -> None:
     print("\nCompetitors found")
     for c in research.competitors:
         price = "; ".join(f"Rs {p.amount_inr:,} {p.unit} ({p.label})" for p in c.prices) or c.price_status
-        print(f"- {c.name} [{c.locality}] | {price} | channels: {', '.join(c.channels) or '-'}")
+        print(f"- {c.name} [{c.locality}] | {price} | schedule: {c.schedule}")
+        print(f"    fit: {c.fit_reason}")
     for note in research.market_price_context:
         print(f"  market: {note.summary}  <{note.source_url}>")
 
 
 def main() -> int:
-    brief = parse_args()
-    crew = build_crew()
+    brief, label = parse_args()
+    crew = build_crew(brief)
     started = time.perf_counter()
     record = {"brief": brief.model_dump(), "started_at": datetime.now().isoformat(timespec="seconds")}
 
@@ -58,6 +61,8 @@ def main() -> int:
     record["seconds"] = round(time.perf_counter() - started, 1)
     task = crew.tasks[0]
     record["guardrail_retries"] = task.retry_count
+    guard = task.guardrail.__self__  # the ResearchGuardrail behind the bound method
+    record["fit_verdicts"] = [v.model_dump() for v in guard.verdicts]
 
     if result is not None:
         research = result.pydantic
@@ -78,11 +83,15 @@ def main() -> int:
 
     out_dir = ROOT / "outputs"
     out_dir.mkdir(exist_ok=True)
-    path = out_dir / f"research_{datetime.now():%Y%m%d_%H%M%S}.json"
+    tag = f"_{label}" if label else ""
+    path = out_dir / f"research_{datetime.now():%Y%m%d_%H%M%S}{tag}.json"
     path.write_text(json.dumps(record, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(f"\nStatus          : {record['status']}  ({record['seconds']} s, guardrail retries: {record['guardrail_retries']})")
     print(f"Tool calls      : {record['tool_calls']}")
+    for i, verdict in enumerate(record["fit_verdicts"], 1):
+        rejected = [j["name"] for j in verdict["judgements"] if not j["direct_competitor"]]
+        print(f"Fit check #{i}    : rejected {rejected or 'none'}")
     if result is not None:
         usage = record["token_usage"]
         print(f"Tokens          : {usage.get('prompt_tokens')} in / {usage.get('completion_tokens')} out")

@@ -23,8 +23,12 @@ def market_researcher(llm=None, tools=None) -> Agent:
             "You know that a listing site such as Justdial or UrbanPro is a place to find businesses, "
             "not a competitor itself, and that a city-wide 'average fee' is market context, not any one "
             "business's price. You never invent a price: if a business only says 'fees on enquiry', you "
-            "record that. You prefer the business's own pages and recent posts, and you keep the exact URL "
-            "of every page you take a fact from."
+            "record that. A direct competitor sells the same kind of thing to the same kind of customer on "
+            "an ongoing basis; a business in a different style or category, one that mainly serves a "
+            "different audience, or a one-off event is not, even if it shows up in the same search. You "
+            "spread your research across several sources instead of copying one listing page, you prefer "
+            "the business's own pages and recent posts, and you keep the exact URL of every page you take "
+            "a fact from."
         ),
         tools=tools if tools is not None else [web_search(), page_reader()],
         llm=llm or get_llm(),

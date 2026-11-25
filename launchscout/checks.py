@@ -13,11 +13,12 @@ from urllib.parse import urlparse
 
 from pydantic import ValidationError
 
-from launchscout.schemas import MarketResearch
+from launchscout.schemas import FitVerdict, MarketResearch
 
 MIN_COMPETITORS = 3
 MAX_COMPETITORS = 6
 MIN_PRICED = 3
+MAX_FROM_ONE_SITE = 2
 
 # Listing and directory sites are sources, not competitors.
 LISTING_SITES = {
@@ -40,6 +41,11 @@ def parse_research(raw: str) -> MarketResearch:
 def is_url(value: str) -> bool:
     parts = urlparse(value.strip())
     return parts.scheme in {"http", "https"} and bool(parts.netloc)
+
+
+def domain(url: str) -> str:
+    host = urlparse(url.strip()).netloc.lower()
+    return host.removeprefix("www.").removeprefix("m.")
 
 
 def _looks_like_listing_site(name: str) -> bool:
@@ -74,6 +80,22 @@ def find_problems(research: MarketResearch) -> list[str]:
             if not 0 < p.amount_inr < 200_000:
                 problems.append(f"Price '{p.label}' for '{c.name}' is Rs {p.amount_inr}, which is not a believable amount.")
 
+        if not c.fit_reason.strip():
+            problems.append(f"'{c.name}' needs a fit_reason: why it competes for the target customer.")
+
+    # Variety: one listing page must not supply most of the market.
+    per_domain: dict[str, list[str]] = {}
+    for c in comps:
+        domains = {domain(u) for u in c.source_urls if is_url(u)}
+        if len(domains) == 1:
+            per_domain.setdefault(domains.pop(), []).append(c.name)
+    for site, names in per_domain.items():
+        if len(names) > MAX_FROM_ONE_SITE:
+            problems.append(
+                f"{len(names)} competitors ({', '.join(names)}) come only from {site}. At most "
+                f"{MAX_FROM_ONE_SITE} may rely on one website; confirm others from a second source or find different ones."
+            )
+
     priced = [c for c in comps if c.price_status == "published" and c.prices]
     if len(priced) < MIN_PRICED:
         problems.append(
@@ -94,6 +116,70 @@ def research_guardrail(task_output: Any) -> tuple[bool, Any]:
     if problems:
         return False, "Fix these problems and answer again:\n- " + "\n- ".join(problems)
     return True, drop_duplicate_prices(research)
+
+
+FIT_PROMPT = """A founder plans to launch: {idea}
+City: {city}
+Target customer: {target_customer}
+
+For each business below, decide whether it is a DIRECT competitor: it sells the same kind of
+product or service, to roughly the same customer, as an ongoing offer in that city.
+Not direct: mainly a different category or style, mainly a different audience (for example only
+children when the target is adults), a one-off event or workshop, a listing site, or outside the city.
+Judge only from the facts given. If the facts are thin but plausible, count it as direct.
+
+Businesses:
+{businesses}"""
+
+
+def llm_fit_judge(brief, research: MarketResearch, llm) -> FitVerdict:
+    """Ask the LLM, with the founder's brief in hand, which competitors really compete."""
+    lines = [
+        f"- {c.name}: offers {c.offering}; schedule: {c.schedule}; "
+        f"prices: {', '.join(p.label for p in c.prices) or c.price_status}; claimed fit: {c.fit_reason}"
+        for c in research.competitors
+    ]
+    prompt = FIT_PROMPT.format(**brief.to_inputs(), businesses="\n".join(lines))
+    answer = llm.call(prompt, response_model=FitVerdict)
+    return answer if isinstance(answer, FitVerdict) else FitVerdict.model_validate_json(str(answer))
+
+
+class ResearchGuardrail:
+    """One guardrail that runs both checks, cheapest first.
+
+    1. Code rules (free, exact): format, prices, URLs, source variety.
+    2. Fit judge (one small LLM call): does each business really compete for THIS customer?
+       Code can't judge "a Bharatanatyam diploma school vs after-work Bollywood"; a model can,
+       as long as it sees the founder's brief, which CrewAI's built-in text guardrail never does.
+
+    Both live in one function on purpose: with a list of guardrails, a retry caused by the
+    second one is not re-checked by the first.
+
+    Give CrewAI the bound method `guard.check`, not the object: CrewAI reads a function
+    guardrail's source code for its logs, and that only works for functions and methods.
+    """
+
+    def __init__(self, brief, llm=None, judge=llm_fit_judge):
+        self.brief = brief
+        self.llm = llm
+        self.judge = judge
+        self.verdicts: list[FitVerdict] = []  # one per attempt that reached the fit check
+
+    def check(self, task_output: Any) -> tuple[bool, Any]:
+        ok, value = research_guardrail(task_output)
+        if not ok:
+            return ok, value
+
+        verdict = self.judge(self.brief, value, self.llm)
+        self.verdicts.append(verdict)
+        rejected = [j for j in verdict.judgements if not j.direct_competitor]
+        if rejected:
+            listed = "\n- ".join(f"{j.name}: {j.reason}" for j in rejected)
+            return False, (
+                f"These are not direct competitors for '{self.brief.target_customer}' and must be replaced "
+                f"by businesses that are (keep the other rules):\n- {listed}"
+            )
+        return True, value
 
 
 def drop_duplicate_prices(research: MarketResearch) -> MarketResearch:

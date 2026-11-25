@@ -5,13 +5,14 @@ from types import SimpleNamespace
 
 from launchscout.brief import DEMO_BRIEF, BusinessBrief
 from launchscout.checks import (
+    ResearchGuardrail,
     find_problems,
     parse_research,
     research_guardrail,
     unverified_urls,
     urls_seen_in_tool_results,
 )
-from launchscout.schemas import MarketResearch
+from launchscout.schemas import FitJudgement, FitVerdict, MarketResearch
 
 
 def competitor(name, priced=True, url="https://example.com/studio"):
@@ -19,6 +20,8 @@ def competitor(name, priced=True, url="https://example.com/studio"):
         "name": name,
         "locality": "RS Puram",
         "offering": "Bollywood, evening batches",
+        "schedule": "Mon-Fri 7-8 pm",
+        "fit_reason": "Evening adult batches",
         "price_status": "published" if priced else "on_enquiry",
         "prices": [{"label": "Adults monthly", "amount_inr": 900, "unit": "per month", "source_url": url}] if priced else [],
         "channels": ["Instagram"],
@@ -107,7 +110,7 @@ def test_crew_wiring_without_api(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test-not-real")
     from launchscout.crew import build_crew
 
-    crew = build_crew(tools=[])
+    crew = build_crew(DEMO_BRIEF, tools=[])
     task = crew.tasks[0]
     assert [a.role for a in crew.agents] == ["Market Researcher"]
     assert task.output_pydantic is MarketResearch
@@ -126,3 +129,61 @@ def test_tracing_off_by_default():
     import os
 
     assert os.environ["CREWAI_TRACING_ENABLED"] == "false"
+
+
+def test_too_many_competitors_from_one_site():
+    data = good_answer()
+    for c in data["competitors"][:3]:
+        c["source_urls"] = ["https://www.urbanpro.com/chennai/dance-classes"]
+    problems = find_problems(MarketResearch.model_validate(data))
+    assert any("come only from urbanpro.com" in p for p in problems)
+
+
+def test_missing_fit_reason_is_flagged():
+    data = good_answer()
+    data["competitors"][0]["fit_reason"] = " "
+    assert any("fit_reason" in p for p in find_problems(MarketResearch.model_validate(data)))
+
+
+def fake_judge(rejected=()):
+    def judge(brief, research, llm):
+        return FitVerdict(judgements=[
+            FitJudgement(name=c.name, direct_competitor=c.name not in rejected, reason="test")
+            for c in research.competitors
+        ])
+    return judge
+
+
+def test_fit_check_rejects_and_names_the_business():
+    guard = ResearchGuardrail(DEMO_BRIEF, judge=fake_judge(rejected={"Studio B"}))
+    ok, feedback = guard.check(SimpleNamespace(raw=json.dumps(good_answer())))
+    assert not ok and "Studio B" in feedback and DEMO_BRIEF.target_customer in feedback
+    assert len(guard.verdicts) == 1
+
+
+def test_fit_check_is_skipped_when_code_rules_fail():
+    calls = []
+    guard = ResearchGuardrail(DEMO_BRIEF, judge=lambda *a: calls.append(1))
+    ok, _ = guard.check(SimpleNamespace(raw="not json"))
+    assert not ok and calls == []  # no LLM call wasted on a broken answer
+
+
+def test_fit_check_passes_clean_answer():
+    ok, value = ResearchGuardrail(DEMO_BRIEF, judge=fake_judge()).check(SimpleNamespace(raw=json.dumps(good_answer())))
+    assert ok and isinstance(value, MarketResearch)
+
+
+def test_guardrail_runs_through_crewai_own_code_path(monkeypatch):
+    """Unit tests above call the guardrail directly; CrewAI also logs it (reading its source).
+    Run it the way CrewAI does so that kind of bug shows up offline, not in a paid run."""
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test-not-real")
+    from crewai.tasks.task_output import TaskOutput
+    from crewai.utilities.guardrail import process_guardrail
+
+    from launchscout.crew import build_crew
+
+    crew = build_crew(DEMO_BRIEF, tools=[], judge=fake_judge())
+    task = crew.tasks[0]
+    output = TaskOutput(description=task.description, raw=json.dumps(good_answer()), agent="Market Researcher")
+    result = process_guardrail(output=output, guardrail=task.guardrail, retry_count=0, event_source=task, from_task=task)
+    assert result.success and isinstance(result.result, MarketResearch)

@@ -27,6 +27,10 @@ class Competitor(BaseModel):
         description="'published' only if a real price was found on a page; never guess a number"
     )
     prices: list[PricePoint] = Field(description="Empty unless price_status is 'published'")
+    schedule: str = Field(
+        description="When customers can use it, e.g. batch timings, opening hours, delivery slots; 'unknown' if not found"
+    )
+    fit_reason: str = Field(description="One sentence: why this business competes for the founder's target customer")
     channels: list[str] = Field(description="Where they sell or take bookings, e.g. Instagram, website, Justdial, walk-in")
     offers: list[str] = Field(description="Trial classes, discounts, packages; empty if none found")
     source_urls: list[str] = Field(description="Every page used for this competitor")
@@ -42,3 +46,15 @@ class MarketResearch(BaseModel):
     market_price_context: list[MarketPriceNote] = Field(
         description="City averages and ranges from listing sites; kept apart from any single competitor's price"
     )
+
+
+class FitJudgement(BaseModel):
+    name: str
+    direct_competitor: bool
+    reason: str = Field(description="One short sentence")
+
+
+class FitVerdict(BaseModel):
+    """The fit judge's answer: one judgement per competitor."""
+
+    judgements: list[FitJudgement]
