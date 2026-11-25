@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 
 from crewai_tools import ScrapeWebsiteTool, SerperDevTool
 
-SEARCHES_PER_RUN = 16  # whole run, including guardrail retries: at most 16 Serper credits
+SEARCHES_PER_RUN = 24  # whole run, including guardrail retries: at most 24 Serper credits (16 left retries with none)
 PAGE_READS_PER_RUN = 12
 
 # Pages not worth a read. Listing sites are huge (UrbanPro: 75,000 characters, mostly

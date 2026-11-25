@@ -134,12 +134,35 @@ def names_business(unit: Evidence, name: str) -> bool:
     return owns_domain(unit.url, name) or bool(mention_positions(unit.text, name))
 
 
+# Words that make a number a price. Bug found by hand: raackdance.com says "4000 events
+# performed", and that statistic "proved" a price the agent had copied from another studio.
+PRICE_CUES = {
+    "rs", "inr", "fee", "fees", "price", "prices", "pricing", "cost", "month", "monthly", "per", "class",
+    "classes", "session", "sessions", "hour", "hr", "course", "package", "only", "just", "joining",
+    "admission", "membership",
+}
+CUE_REACH = 30  # characters either side of the number
+
+
+def _priced_amounts(text: str) -> set[int]:
+    """Numbers that sit next to price wording."""
+    found = set()
+    for m in re.finditer(r"\d[\d,]*", text):
+        digits = m.group().replace(",", "")
+        if not digits.isdigit():
+            continue
+        nearby = text[max(0, m.start() - CUE_REACH) : m.end() + CUE_REACH].split()
+        if PRICE_CUES.intersection(nearby):
+            found.add(int(digits))
+    return found
+
+
 def price_grounded(unit: Evidence, name: str, amount: int) -> bool:
     if owns_domain(unit.url, name):
-        return amount in _amounts(unit.text)
+        return amount in _priced_amounts(unit.text)
     for pos in mention_positions(unit.text, name):
         window = unit.text[max(0, pos - BEFORE) : pos + AFTER]
-        if amount in _amounts(window):
+        if amount in _priced_amounts(window):
             return True
     return False
 
@@ -238,6 +261,9 @@ def repair_claims(research, evidence: list[Evidence], city: str | None = None):
                 notes.append(f"Removed source {u} for '{c.name}': it never names the business.")
         prices = []
         for p in c.prices:
+            if p.amount_inr <= 0:
+                notes.append(f"Removed price Rs {p.amount_inr} ('{p.label}') for '{c.name}': a free offer is not a price.")
+                continue
             if citable(p.source_url) and any(
                 price_grounded(e, c.name, p.amount_inr) for e in by_url.get(normalize_url(p.source_url), [])
             ):

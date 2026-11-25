@@ -198,3 +198,32 @@ def test_tool_refusal_is_not_page_evidence():
         {"role": "tool", "tool_call_id": "p1", "content": "Tool 'read_website_content' has reached its usage limit of 4 times"},
     ]
     assert extract_evidence(messages) == []
+
+
+def test_statistic_on_own_site_is_not_a_price():
+    """Regression: '4000 events performed' on raackdance.com 'proved' a copied Rs 4,000 price."""
+    site = "https://raackdance.com/"
+    unit = page(site, "45 dance studios 100000 students trained 4000 events performed 28 years of expertise")
+    fixed, notes = repair_claims_for(one("Raack Academy of Dance", [(4000, site)], [site]), [unit])
+    assert fixed.competitors[0].prices == [] and any("Removed price Rs 4000" in n for n in notes)
+
+
+def test_real_price_wording_still_counts():
+    site = "https://thelifeofdance.com/"
+    unit = page(site, "get started adults 13 and above 4,000 month unlimited access to all styles")
+    fixed, _ = repair_claims_for(one("The Life of Dance", [(4000, site)], [site]), [unit])
+    assert fixed.competitors[0].prices[0].amount_inr == 4000
+
+
+def test_free_offer_is_removed_not_failed():
+    ig = "https://www.instagram.com/reel/x/"
+    unit = page(ig, "Yoshvas Dance Studio adult batch first 2 classes free")
+    research = one("Yoshva's Dance Studio", [(0, ig)], [ig])
+    fixed, notes = repair_claims_for(research, [unit])
+    assert fixed.competitors[0].prices == [] and any("free offer" in n for n in notes)
+
+
+def repair_claims_for(research, units):
+    from launchscout.evidence import repair_claims
+
+    return repair_claims(research, units)

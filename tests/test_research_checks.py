@@ -272,3 +272,16 @@ def test_no_steering_when_enough_prices():
     data["competitors"][0]["name"] = data["competitors"][1]["name"]  # duplicate: fails for another reason
     ok, feedback = guard.check(output_for(data))
     assert not ok and "Already checked" not in feedback
+
+
+def test_shared_poster_template_is_not_a_duplicate():
+    from launchscout.checks import duplicate_problems
+
+    data = good_answer()
+    for c, url in zip(data["competitors"][:2], ["https://ig.example.com/p/1", "https://ig.example.com/p/2"]):
+        c["prices"] = [
+            {"label": "Adults joining", "amount_inr": 1500, "unit": "joining fee", "source_url": url},
+            {"label": "Adults monthly", "amount_inr": 800, "unit": "per month", "source_url": url},
+        ]
+        c["source_urls"] = [url]
+    assert duplicate_problems(MarketResearch.model_validate(data)) == []

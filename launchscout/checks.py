@@ -262,7 +262,10 @@ def duplicate_problems(research: MarketResearch) -> list[str]:
         for b in comps[i + 1 :]:
             same_words = bool(_distinctive_words(a.name)) and _distinctive_words(a.name) == _distinctive_words(b.name)
             prices_a = sorted((p.amount_inr, p.unit) for p in a.prices)
-            same_prices = len(prices_a) >= 2 and prices_a == sorted((p.amount_inr, p.unit) for p in b.prices)
+            # Identical prices alone are not enough: studios share poster templates
+            # ("adults joining 1,500, monthly 800" seen for several). They must also share a page.
+            shared_page = bool(set(a.source_urls) & set(b.source_urls))
+            same_prices = shared_page and len(prices_a) >= 2 and prices_a == sorted((p.amount_inr, p.unit) for p in b.prices)
             if same_words or same_prices:
                 problems.append(
                     f"'{a.name}' and '{b.name}' look like the same business. List it once and find another competitor."
