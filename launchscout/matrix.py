@@ -6,7 +6,9 @@ and the report prints it as is, so no price or rating can be retyped wrongly.
 
 from launchscout.schemas import MarketResearch, ReviewResearch
 
-PREFERRED_UNITS = ("per month", "per class", "per course", "per hour", "other")
+# The headline price per competitor: recurring prices first, then per-unit ones.
+PREFERRED_UNITS = ("per month", "per week", "per day", "per meal", "per class", "per visit", "per order",
+                   "per item", "per course", "per hour", "per year", "other")
 
 
 def headline_price(competitor) -> dict | None:

@@ -86,6 +86,7 @@ def main() -> int:
     record["reviews"] = reviews.model_dump() if reviews else None
     record["strategy"] = strategy.model_dump() if strategy else None
     record["matrix"] = build_matrix(research, reviews) if research else None
+    record["partial"] = research_guard.partial
     record["plan"] = report_guard.last_plan.model_dump() if report_guard.last_plan else None
     record["report_file"] = REPORT_FILE if report_guard.report else None
     record["attempts"] = {"research": research_guard.attempts, "reviews": review_guard.attempts,

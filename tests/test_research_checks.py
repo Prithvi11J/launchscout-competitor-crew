@@ -285,3 +285,33 @@ def test_shared_poster_template_is_not_a_duplicate():
         ]
         c["source_urls"] = [url]
     assert duplicate_problems(MarketResearch.model_validate(data)) == []
+
+
+def two_priced_answer():
+    return research(competitor("Priced A", url="https://a.example.com"), competitor("Priced B", url="https://b.example.com"),
+                    competitor("Silent C", priced=False, url="https://c.example.com"))
+
+
+def test_partial_outcome_only_on_the_last_attempt():
+    guard = ResearchGuardrail(DEMO_BRIEF, judge=fake_judge())
+    ok1, _ = guard.check(output_for(two_priced_answer()))
+    ok2, _ = guard.check(output_for(two_priced_answer()))
+    ok3, value = guard.check(output_for(two_priced_answer()))  # third check = last attempt
+    assert (ok1, ok2, ok3) == (False, False, True) and guard.partial
+    assert guard.attempts[-1]["feedback"] == "passed (partial)"
+
+
+def test_partial_needs_two_priced_and_no_other_problem():
+    guard = ResearchGuardrail(DEMO_BRIEF, judge=fake_judge(), max_retries=0)  # every check is the last one
+    one_priced = research(competitor("Priced A", url="https://a.example.com"), competitor("Silent B", priced=False, url="https://b.example.com"),
+                          competitor("Silent C", priced=False, url="https://c.example.com"))
+    assert not guard.check(output_for(one_priced))[0]
+    dup = two_priced_answer()
+    dup["competitors"][2]["name"] = "Priced A"  # a duplicate is a real problem, never excused
+    assert not ResearchGuardrail(DEMO_BRIEF, judge=fake_judge(), max_retries=0).check(output_for(dup))[0]
+
+
+def test_meal_prices_have_their_own_unit():
+    data = good_answer()
+    data["competitors"][0]["prices"][0]["unit"] = "per meal"
+    assert MarketResearch.model_validate(data).competitors[0].prices[0].unit == "per meal"

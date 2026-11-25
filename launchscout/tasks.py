@@ -83,8 +83,8 @@ def strategy_task(agent: Agent, guardrail, research: Task, reviews: Task) -> Tas
         expected_output=(
             "One JSON object with: market_gap (2 to 3 sentences), gap_evidence (list of competitor names, "
             "exactly as in the research, whose data shows the gap), positioning (one poster-style line that "
-            "includes the price), recommended_price_inr (whole number), price_unit ('per month', 'per class', "
-            "'per hour', 'per course' or 'other') and price_reason (1 to 2 sentences comparing with competitors' "
+            "includes the price), recommended_price_inr (whole number), price_unit (the unit that fits the "
+            "business, e.g. 'per month', 'per meal', 'per class', 'per visit') and price_reason (1 to 2 sentences comparing with competitors' "
             "real prices). Mention no number that is not in the research or reviews, except your own price."
         ),
         agent=agent,

@@ -20,6 +20,7 @@ from launchscout.schemas import FitVerdict, MarketResearch
 MIN_COMPETITORS = 3
 MAX_COMPETITORS = 6
 MIN_PRICED = 3
+PARTIAL_MIN_PRICED = 2  # on the last attempt, accept this many and report the price gap honestly
 MAX_FROM_ONE_SITE = 2
 
 # Listing and directory sites are sources, not competitors.
@@ -103,13 +104,21 @@ def find_problems(research: MarketResearch) -> list[str]:
                 f"{MAX_FROM_ONE_SITE} may rely on one website; confirm others from a second source or find different ones."
             )
 
-    priced = [c for c in comps if has_class_price(c)]
-    if len(priced) < MIN_PRICED:
-        problems.append(
-            f"At least {MIN_PRICED} competitors need a published price (not just a joining fee) with its source page; "
-            f"only {len(priced)} have one. Search for more competitors or for their fee pages, Instagram posts or listing pages."
-        )
+    shortfall = price_shortfall(research)
+    if shortfall:
+        problems.append(shortfall)
     return problems
+
+
+def price_shortfall(research: MarketResearch) -> str | None:
+    """The one rule a thin market can honestly fail: too few businesses publish prices."""
+    priced = sum(1 for c in research.competitors if has_class_price(c))
+    if priced >= MIN_PRICED:
+        return None
+    return (
+        f"At least {MIN_PRICED} competitors need a published price (not just a joining fee) with its source page; "
+        f"only {priced} have one. Search for more competitors or for their fee pages, Instagram posts or listing pages."
+    )
 
 
 def research_guardrail(task_output: Any) -> tuple[bool, Any]:
@@ -171,7 +180,7 @@ class ResearchGuardrail:
     guardrail's source code for its logs, and that only works for functions and methods.
     """
 
-    def __init__(self, brief, llm=None, judge=llm_fit_judge):
+    def __init__(self, brief, llm=None, judge=llm_fit_judge, max_retries: int = 2):
         self.brief = brief
         self.llm = llm
         self.judge = judge
@@ -180,6 +189,8 @@ class ResearchGuardrail:
         self.attempts: list[dict] = []  # which check stopped each attempt, for the run record
         self.last_research: MarketResearch | None = None  # kept so a failed run still has an answer to review
         self.dead_ends: dict[str, str] = {}  # businesses checked without a usable price, across attempts
+        self.max_retries = max_retries  # must match the task's guardrail_max_retries
+        self.partial = False  # True when the run passed with fewer than MIN_PRICED priced competitors
 
     def _collect(self, messages) -> None:
         known = {(e.url, e.text) for e in self.evidence}
@@ -228,6 +239,14 @@ class ResearchGuardrail:
         value, repairs = repair_claims(parsed, self.evidence, city=self.brief.city)
         self.last_research = value
         problems = find_problems(value) + duplicate_problems(value)
+        # Partial outcome: on the last attempt, a thin market may pass with fewer priced competitors.
+        # The report then says so plainly ("only 2 of 5 publish prices") instead of the run stopping.
+        shortfall = price_shortfall(value)
+        last_attempt = len(self.attempts) >= self.max_retries
+        priced = sum(1 for c in value.competitors if has_class_price(c))
+        if last_attempt and problems == [shortfall] and priced >= PARTIAL_MIN_PRICED:
+            self.partial = True
+            problems = []
         if problems:
             feedback = "Fix these problems and answer again:\n- " + "\n- ".join(problems)
             if repairs:
@@ -248,9 +267,9 @@ class ResearchGuardrail:
                 f"These are not direct competitors for '{self.brief.target_customer}' and must be replaced "
                 f"by businesses that are (keep the other rules):\n- {listed}"
             )
-        self.attempts.append({"stopped_by": None, "feedback": "passed", "repairs": repairs})
-        priced = sum(1 for c in value.competitors if has_class_price(c))
-        emit("Market Researcher", f"Confirmed {len(value.competitors)} competitors, {priced} with published prices")
+        self.attempts.append({"stopped_by": None, "feedback": "passed (partial)" if self.partial else "passed", "repairs": repairs})
+        note = " (fewer than 3 publish prices: reported as a gap)" if self.partial else ""
+        emit("Market Researcher", f"Confirmed {len(value.competitors)} competitors, {priced} with published prices{note}")
         return True, drop_duplicate_prices(value)
 
 

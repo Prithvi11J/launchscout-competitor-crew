@@ -64,3 +64,9 @@ def test_four_agent_crew_saves_report(monkeypatch):
     crew = build_crew(DEMO_BRIEF)
     assert [a.role for a in crew.agents] == ["Market Researcher", "Review Analyst", "Strategy Analyst", "Report Writer"]
     assert crew.tasks[3].output_file == "outputs/report.md" and crew.tasks[3].context == crew.tasks[:3]
+
+
+def test_partial_report_explains_the_price_gap():
+    report = assemble_report(DEMO_BRIEF, RESEARCH, REVIEWS, strategy(), plan(), partial=True)
+    assert "fewer than 3 competitors in Chennai publish prices" in report
+    assert "fewer than 3" not in assemble_report(DEMO_BRIEF, RESEARCH, REVIEWS, strategy(), plan())

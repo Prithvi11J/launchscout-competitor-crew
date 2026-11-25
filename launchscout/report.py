@@ -37,7 +37,7 @@ class Sources:
         return f"[{self.urls.index(url) + 1}]"
 
 
-def assemble_report(brief, research, reviews, strategy, plan: LaunchPlan) -> str:
+def assemble_report(brief, research, reviews, strategy, plan: LaunchPlan, partial: bool = False) -> str:
     src = Sources()
     rows = build_matrix(research, reviews)
     review_by_name = {r.competitor: r for r in (reviews.competitors if reviews else [])}
@@ -54,6 +54,9 @@ def assemble_report(brief, research, reviews, strategy, plan: LaunchPlan) -> str
         out.append(f"| {row['name']} | {row['locality']} | {price} | {row['schedule'][:70]} | {rating} | {', '.join(row['channels']) or '-'} |")
     priced = sum(1 for row in rows if row["price"])
     out += ["", f"{priced} of {len(rows)} competitors publish a price; the rest share fees only on enquiry.", ""]
+    if partial:
+        out += [f"> **Note:** fewer than 3 competitors in {brief.city} publish prices online, so price comparisons "
+                f"rest on {priced} businesses. Hidden prices are themselves a gap: an openly priced offer stands out.", ""]
 
     out += [f"## 2. {SECTIONS[1]}", ""]
     any_complaint = False
@@ -134,7 +137,7 @@ class ReportGuardrail:
             self.attempts.append({"stopped_by": "rules", "feedback": feedback})
             emit("Report Writer", f"Sent back: {problems[0]}")
             return False, feedback
-        self.report = assemble_report(brief, research, reviews, strategy, plan)
+        self.report = assemble_report(brief, research, reviews, strategy, plan, partial=getattr(self.research_guard, "partial", False))
         self.attempts.append({"stopped_by": None, "feedback": "passed"})
         emit("Report Writer", "Report written: 6 sections with numbered sources")
         return True, self.report

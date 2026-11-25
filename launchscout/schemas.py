@@ -9,7 +9,11 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-PriceUnit = Literal["per month", "per class", "per hour", "per course", "joining fee", "other"]
+# General enough for most local businesses: classes, meals, services, rentals.
+PriceUnit = Literal[
+    "per month", "per week", "per day", "per meal", "per class", "per visit", "per order", "per item",
+    "per course", "per hour", "per year", "joining fee", "other",
+]
 
 
 class PricePoint(BaseModel):

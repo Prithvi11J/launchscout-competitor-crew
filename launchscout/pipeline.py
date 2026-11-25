@@ -38,6 +38,7 @@ def run_crew(brief: BusinessBrief, sink=None) -> dict:
         "error": error,
         "seconds": round(time.perf_counter() - started, 1),
         "report": guards[3].report,
+        "partial": getattr(guards[0], "partial", False),
         "matrix": build_matrix(research, reviews) if research else None,
         "strategy": guards[2].last_strategy.model_dump() if guards[2].last_strategy else None,
     }
