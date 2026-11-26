@@ -29,6 +29,15 @@ for icon, name, job, check in AGENTS:
         st.write(job)
         st.caption(f"**Checked in code:** {check}")
 
+st.subheader("Tested with planted errors")
+st.write("Known mistakes were planted into real saved runs (copied prices, invented links, the wrong city, "
+         "marketing text passed off as reviews, invented numbers) to see how many the checks catch.")
+c1, c2, c3 = st.columns(3)
+c1.metric("Planted errors caught", "158 / 161", border=True)
+c2.metric("Kinds of error", "19", border=True)
+c3.metric("Wrong-city plants caught", "21 / 21", border=True)
+st.caption("Re-run it yourself, free and offline: `python scripts/evaluate.py` (results in eval/results.md).")
+
 st.subheader("When a check fails")
 st.write("Code first repairs what it can: it moves a price to the page that really shows it, and drops claims "
          "no page supports. If too little is left, the agent is sent back with the exact problem and a list of "
