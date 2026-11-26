@@ -1,0 +1,229 @@
+{
+  "brief": {
+    "idea": "Evening and weekend dance classes (Bollywood, hip-hop, dance fitness)",
+    "city": "Chennai",
+    "target_customer": "Working professionals, age 22 to 40",
+    "known_competitors": []
+  },
+  "started_at": "2026-11-25T08:27:30",
+  "seconds": 146.9,
+  "guardrail_retries": 2,
+  "fit_verdicts": [
+    {
+      "judgements": [
+        {
+          "name": "The Life of Dance Academy",
+          "direct_competitor": true,
+          "reason": "It offers recurring adult dance classes in Chennai with evening and weekend batches for adults."
+        },
+        {
+          "name": "Unitedbydance Community",
+          "direct_competitor": true,
+          "reason": "It offers ongoing adult Bollywood and Hip-Hop classes in Chennai with evening and weekend timings."
+        },
+        {
+          "name": "Raack Dance Academy",
+          "direct_competitor": true,
+          "reason": "It appears to serve adults with ongoing dance and dance-fitness programs in Chennai."
+        },
+        {
+          "name": "Chennai Beats Dance Academy",
+          "direct_competitor": true,
+          "reason": "It offers recurring adult dance-fitness and freestyle classes in Chennai."
+        },
+        {
+          "name": "Tara's Dance Academy",
+          "direct_competitor": true,
+          "reason": "It runs an ongoing adult evening batch in Chennai for adults."
+        }
+      ]
+    }
+  ],
+  "guardrail_attempts": [
+    {
+      "stopped_by": "rules after repair",
+      "feedback": "Fix these problems and answer again:\n- At least 3 competitors need a published price with its source page; only 1 have one. Search for more competitors or for their fee pages, Instagram posts or listing pages.\nCode already removed or corrected these claims, which no page you saw supports:\n- Removed source https://www.instagram.com/reel/DWsZUhlgR_2/ for 'Yoshva's Dance Studio': it never names the business.\n- Removed price Rs 999 ('Adult intermediate batch') for 'Yoshva's Dance Studio': no page shows it next to the business.\n- Removed source https://www.instagram.com/reel/DUWHJuwiknj/ for 'Moves Dance Studio': it never names the business.\n- Removed source https://www.instagram.com/p/DfrimQNypsy/ for 'Praful's School Of Dance': it never names the business.\n- Removed source https://www.instagram.com/p/DdQvarov0YI/ for 'Praful's School Of Dance': it never names the business.\n- Removed price Rs 2500 ('Monthly package') for 'Praful's School Of Dance': no page shows it next to the business.\n- Removed price Rs 2500 ('Monthly package') for 'Praful's School Of Dance': no page shows it next to the business.\n- Removed 'Praful's School Of Dance': no page you saw names it.",
+      "repairs": [
+        "Removed source https://www.instagram.com/reel/DWsZUhlgR_2/ for 'Yoshva's Dance Studio': it never names the business.",
+        "Removed price Rs 999 ('Adult intermediate batch') for 'Yoshva's Dance Studio': no page shows it next to the business.",
+        "Removed source https://www.instagram.com/reel/DUWHJuwiknj/ for 'Moves Dance Studio': it never names the business.",
+        "Removed source https://www.instagram.com/p/DfrimQNypsy/ for 'Praful's School Of Dance': it never names the business.",
+        "Removed source https://www.instagram.com/p/DdQvarov0YI/ for 'Praful's School Of Dance': it never names the business.",
+        "Removed price Rs 2500 ('Monthly package') for 'Praful's School Of Dance': no page shows it next to the business.",
+        "Removed price Rs 2500 ('Monthly package') for 'Praful's School Of Dance': no page shows it next to the business.",
+        "Removed 'Praful's School Of Dance': no page you saw names it."
+      ]
+    },
+    {
+      "stopped_by": "rules after repair",
+      "feedback": "Fix these problems and answer again:\n- At least 3 competitors need a published price with its source page; only 1 have one. Search for more competitors or for their fee pages, Instagram posts or listing pages.\nCode already removed or corrected these claims, which no page you saw supports:\n- Removed source https://www.instagram.com/reel/DcspqvhSbJq/ for 'Raack Dance Academy': it never names the business.",
+      "repairs": [
+        "Removed source https://www.instagram.com/reel/DcspqvhSbJq/ for 'Raack Dance Academy': it never names the business."
+      ]
+    },
+    {
+      "stopped_by": null,
+      "feedback": "passed",
+      "repairs": []
+    }
+  ],
+  "evidence_units": 164,
+  "status": "ok",
+  "research": {
+    "competitors": [
+      {
+        "name": "The Life of Dance Academy",
+        "locality": "unknown",
+        "offering": "Adult fitness and technique dance batches in Chennai, including weekday adult evening batches, weekend adult morning batches, and special choreography sessions; the academy says it serves adults looking for a fun alternative to the gym.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "One-time registration fee",
+            "amount_inr": 1500,
+            "unit": "joining fee",
+            "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+          },
+          {
+            "label": "Adult Fitness & Technique Batches",
+            "amount_inr": 4000,
+            "unit": "per month",
+            "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+          },
+          {
+            "label": "Trial class",
+            "amount_inr": 500,
+            "unit": "per class",
+            "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+          }
+        ],
+        "schedule": "Weekday Adult Batches (Evening): Mondays & Wednesdays | 7:30 PM to 9:00 PM; Weekend Adult Batches (Morning): Saturdays & Sundays | 8:00 AM to 9:30 AM; Special Choreography Sessions: Fridays | 6:00 PM to 8:00 PM.",
+        "fit_reason": "It competes directly because it sells recurring adult dance classes in Chennai with evening and weekend timing that matches working professionals.",
+        "channels": [
+          "website"
+        ],
+        "offers": [
+          "Quarterly Term Packages: 15% discount on total batch fees when pre-paid for 3 months",
+          "Trial class at ₹500, adjusted against registration fee when enrolling"
+        ],
+        "source_urls": [
+          "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+        ]
+      },
+      {
+        "name": "Unitedbydance Community",
+        "locality": "Karapakkam",
+        "offering": "Adult dance classes with Bollywood, Hip-Hop, Contemporary and Locking; the studio lists weekday evening, weekend, and early-morning batches for adults, plus separate women’s batches and choreography courses.",
+        "price_status": "on_enquiry",
+        "prices": [],
+        "schedule": "Adults, weekday evenings: Monday and Wednesday, 8:00 PM to 9:00 PM; Adults, weekends: Saturday, 7:00 PM to 8:00 PM, and Sunday, 12:00 noon to 1:00 PM; Early-morning batch for working adults: Tuesday and Thursday, 8:00 AM to 9:00 AM.",
+        "fit_reason": "It competes directly because it offers recurring adult Bollywood and Hip-Hop classes in Chennai with evening and weekend schedules for working professionals.",
+        "channels": [
+          "website",
+          "WhatsApp",
+          "phone",
+          "email"
+        ],
+        "offers": [
+          "Separate batches for women",
+          "Yearly show (optional)",
+          "Beginners to Advanced"
+        ],
+        "source_urls": [
+          "https://www.ubdcommunity.com/classes"
+        ]
+      },
+      {
+        "name": "Raack Dance Academy",
+        "locality": "unknown",
+        "offering": "Independent dance academy for kids and adults, with dance-fitness and adult dance programs mentioned on the website and in search snippets.",
+        "price_status": "not_found",
+        "prices": [],
+        "schedule": "unknown",
+        "fit_reason": "It competes directly because it serves adults with ongoing dance and dance-fitness programs in Chennai that are relevant to working professionals.",
+        "channels": [
+          "website"
+        ],
+        "offers": [
+          "Registration for the academic year 2026-2027 are open now"
+        ],
+        "source_urls": [
+          "https://raackdance.com/"
+        ]
+      },
+      {
+        "name": "Chennai Beats Dance Academy",
+        "locality": "unknown",
+        "offering": "Adult dance-fitness and choreography classes in Chennai, with adult freestyle batches referenced in social posts and video snippets.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Adults, 8 classes per month",
+            "amount_inr": 4500,
+            "unit": "per month",
+            "source_url": "https://www.facebook.com/hipsntoezindia/posts/vibing-to-en-jannal-vandha-kaatre-namma-adult-freestyle-batch-oda-energy-a-paaru/1542352934575852/"
+          }
+        ],
+        "schedule": "unknown",
+        "fit_reason": "It competes directly because it offers recurring adult dance-fitness / freestyle classes for the same working-professional age group in Chennai.",
+        "channels": [
+          "Facebook"
+        ],
+        "offers": [],
+        "source_urls": [
+          "https://www.facebook.com/hipsntoezindia/posts/vibing-to-en-jannal-vandha-kaatre-namma-adult-freestyle-batch-oda-energy-a-paaru/1542352934575852/"
+        ]
+      },
+      {
+        "name": "Tara's Dance Academy",
+        "locality": "unknown",
+        "offering": "Adult dance batches in Chennai, including Bollywood-style classes with evening timings and monthly membership pricing shown in social snippets.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Adults batch monthly fee",
+            "amount_inr": 1500,
+            "unit": "per month",
+            "source_url": "https://www.google.com/goto?url=CAESZwHEIkXXjRSh5yDoVvrPrK9uq2lpj4X-ZuoOg3RTGHBQcnWKG5E-aZAixFO8ly7sG3zTWYxXNiU61TqE7OTyaC2Pr_KucSlSFqp74UYSVHjHWScBaMAgMaJap0NLjyR99CP1aYaNs8M&gsessionid=NsXObtsLNJ6xIzPivUGUQK1paio4HTrYM1CzI867MqxTpdRMhLJ1mw"
+          }
+        ],
+        "schedule": "Adults batch: Monday, Wednesday and Friday, 7:00 PM to 8:00 PM.",
+        "fit_reason": "It competes directly because it runs an ongoing evening adult batch for the same working-professional audience in Chennai.",
+        "channels": [
+          "social media"
+        ],
+        "offers": [],
+        "source_urls": [
+          "https://www.google.com/goto?url=CAESZwHEIkXXjRSh5yDoVvrPrK9uq2lpj4X-ZuoOg3RTGHBQcnWKG5E-aZAixFO8ly7sG3zTWYxXNiU61TqE7OTyaC2Pr_KucSlSFqp74UYSVHjHWScBaMAgMaJap0NLjyR99CP1aYaNs8M&gsessionid=NsXObtsLNJ6xIzPivUGUQK1paio4HTrYM1CzI867MqxTpdRMhLJ1mw"
+        ]
+      }
+    ],
+    "market_price_context": [
+      {
+        "summary": "Chennai dance class fees are commonly shown at ₹3,000 to ₹5,000 per month for regular batches, with a trial class at ₹500 and a one-time registration fee of ₹1,500.",
+        "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+      },
+      {
+        "summary": "UrbanPro search results and guide snippets for Chennai dance classes show examples such as ₹450 per hour and monthly fee ranges of ₹3,600 to ₹7,200 for 12 classes per month, with broader guide snippets also showing ₹300 to ₹600 hourly and ₹800 to ₹3,500 monthly.",
+        "source_url": "https://www.google.com/goto?url=CAESdQHEIkXXrznPDgrXWRTxuqb3erLqJZyyM6xyOXxSAQRHS7LdR650g6a5N9czNf88Lr7t5QbXd0n7Uh1qPCVJ69iUMETpq3u50DziXxEctD4E2V28JNT9xn7TBSODG1LkzmRviIn3HQgH4nL7GMm4vbMHbeMDtQ&gsessionid=dxtrXtK20YawmTuQ64TjZmoHRK2PPsu3O3rogi7zwDP7V81bLuOzSw"
+      },
+      {
+        "summary": "Justdial listing snippets for Chennai dance classes indicate typical category pricing such as ₹1,000 per session for western dance classes for kids, ₹1,500 per session for teens/adults, and ₹2,000 per session for Zumba/dance fitness classes.",
+        "source_url": "https://www.justdial.com/Chennai/Dance-Classes-For-Women/nct-11996163"
+      }
+    ]
+  },
+  "problems": [],
+  "token_usage": {
+    "total_tokens": 187752,
+    "prompt_tokens": 180658,
+    "cached_prompt_tokens": 131840,
+    "completion_tokens": 7094,
+    "reasoning_tokens": 0,
+    "cache_creation_tokens": 0,
+    "successful_requests": 17
+  },
+  "tool_calls": {
+    "Search the internet with Serper": 8,
+    "Read website content": 4
+  }
+}

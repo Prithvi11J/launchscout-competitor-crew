@@ -1,0 +1,196 @@
+{
+  "planted": {
+    "invented price on a real page": [
+      21,
+      21
+    ],
+    "source link never seen": [
+      21,
+      21
+    ],
+    "search-engine redirect as source": [
+      21,
+      21
+    ],
+    "padded source that never names the business": [
+      16,
+      16
+    ],
+    "city-wide price range given as a competitor's price": [
+      5,
+      6
+    ],
+    "competitor placed in the wrong city": [
+      21,
+      21
+    ],
+    "listing site named as a competitor": [
+      6,
+      6
+    ],
+    "same business listed twice": [
+      6,
+      6
+    ],
+    "price copied from another competitor": [
+      17,
+      19
+    ],
+    "another business's review attached": [
+      5,
+      5
+    ],
+    "invented customer quote": [
+      5,
+      5
+    ],
+    "business's own marketing text as a review": [
+      5,
+      5
+    ],
+    "wrong Google rating": [
+      3,
+      3
+    ],
+    "invented number in the strategy": [
+      1,
+      1
+    ],
+    "unknown competitor cited as evidence": [
+      1,
+      1
+    ],
+    "launch price far outside the market": [
+      1,
+      1
+    ],
+    "positioning line without the price": [
+      1,
+      1
+    ],
+    "invented price in the launch plan": [
+      1,
+      1
+    ],
+    "launch plan missing a week": [
+      1,
+      1
+    ]
+  },
+  "controls": {
+    "control: real competitor kept by the city check": [
+      21,
+      23
+    ],
+    "control: real review quotes kept": [
+      1,
+      1
+    ],
+    "control: real strategy passes": [
+      1,
+      1
+    ],
+    "control: real plan passes": [
+      1,
+      1
+    ]
+  },
+  "hand_labelled": [
+    {
+      "run": "081908_chennai",
+      "kind": "price",
+      "business": "Raack Academy Of Dance",
+      "url": "https://lbb.in/chennai/best-dance-classes-chennai/",
+      "amount": 1500,
+      "wrong": false,
+      "note": "adults fee in an lbb.in article, about 460 characters after the name",
+      "flagged": false,
+      "correct": true
+    },
+    {
+      "run": "081908_chennai",
+      "kind": "price",
+      "business": "Leo's Dance Academy",
+      "url": "https://lbb.in/chennai/best-dance-classes-chennai/",
+      "amount": 300,
+      "wrong": false,
+      "note": "personal class fee, about 540 characters after the name",
+      "flagged": true,
+      "correct": false
+    },
+    {
+      "run": "081908_chennai",
+      "kind": "price",
+      "business": "Raack Academy Of Dance",
+      "url": "https://lbb.in/chennai/best-dance-classes-chennai/",
+      "amount": 1300,
+      "wrong": true,
+      "note": "children's fee in the same paragraph as the adult fee",
+      "flagged": false,
+      "correct": false
+    },
+    {
+      "run": "081832_coimbatore",
+      "kind": "source",
+      "business": "Movementz Factor",
+      "url": "https://www.instagram.com/p/DVEJDAxE-5s/",
+      "wrong": false,
+      "note": "post names the studio as @movementzfactor",
+      "flagged": false,
+      "correct": true
+    },
+    {
+      "run": "081832_coimbatore",
+      "kind": "price",
+      "business": "Movementz Factor",
+      "url": "https://www.instagram.com/p/DVEJDAxE-5s/",
+      "amount": 1200,
+      "wrong": false,
+      "note": "joining fee in that post",
+      "flagged": false,
+      "correct": true
+    },
+    {
+      "run": "081832_coimbatore",
+      "kind": "source",
+      "business": "DSA Dance Academy",
+      "url": "https://www.instagram.com/p/DVEJDAxE-5s/",
+      "wrong": true,
+      "note": "post belongs to another studio",
+      "flagged": true,
+      "correct": true
+    },
+    {
+      "run": "081832_coimbatore",
+      "kind": "source",
+      "business": "Movementz Factor",
+      "url": "https://www.instagram.com/reel/DW82IOLjEe7/",
+      "wrong": true,
+      "note": "reel belongs to Vibe Dance Academy",
+      "flagged": true,
+      "correct": true
+    },
+    {
+      "run": "101033_budget24_3",
+      "kind": "price",
+      "business": "Raack Academy of Dance",
+      "url": "https://raackdance.com/",
+      "amount": 4000,
+      "wrong": true,
+      "note": "only '4000 events performed' on the page; price copied from another studio",
+      "flagged": true,
+      "correct": true
+    },
+    {
+      "run": "101033_budget24_3",
+      "kind": "price",
+      "business": "The Life of Dance",
+      "url": "https://thelifeofdance.com/",
+      "amount": 4000,
+      "wrong": false,
+      "note": "'adults 13 and above 4,000 month' on its own site",
+      "flagged": false,
+      "correct": true
+    }
+  ]
+}

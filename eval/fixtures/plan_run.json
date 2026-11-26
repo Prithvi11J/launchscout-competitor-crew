@@ -1,0 +1,501 @@
+{
+  "brief": {
+    "idea": "Evening and weekend dance classes (Bollywood, hip-hop, dance fitness)",
+    "city": "Chennai",
+    "target_customer": "Working professionals, age 22 to 40",
+    "known_competitors": []
+  },
+  "started_at": "2026-11-26T00:20:05",
+  "status": "ok",
+  "token_usage": {
+    "total_tokens": 5027,
+    "prompt_tokens": 4095,
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 932,
+    "reasoning_tokens": 0,
+    "cache_creation_tokens": 0,
+    "successful_requests": 2
+  },
+  "seconds": 11.5,
+  "research": {
+    "competitors": [
+      {
+        "name": "Dance and Dance Studio",
+        "locality": "Anna Salai / Greams Road",
+        "offering": "Weekend dance workshops and ongoing dance classes in Bollywood, hip hop, Zumba, and dance fitness; the site also lists weekday and weekend schedules and multiple dance styles for adults.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Bollywood Dance Workshop, 3 hours",
+            "amount_inr": 800,
+            "unit": "per course",
+            "source_url": "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+          },
+          {
+            "label": "Bollywood Dance Workshop, 2 hours",
+            "amount_inr": 600,
+            "unit": "per course",
+            "source_url": "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+          },
+          {
+            "label": "Zumba / Basics Fitness Classes",
+            "amount_inr": 500,
+            "unit": "per class",
+            "source_url": "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+          },
+          {
+            "label": "Hiphop Workshop",
+            "amount_inr": 500,
+            "unit": "per class",
+            "source_url": "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+          }
+        ],
+        "schedule": "Sundays for weekend workshops; Bollywood 2.00 to 5.00 pm; Zumba/Basics Fitness 6.30 to 8.30 pm; Hiphop 5.00 to 7.00 pm",
+        "fit_reason": "This is a Chennai dance studio selling Bollywood, hip hop and fitness-oriented classes to adults with weekend and evening timing, which overlaps directly with the founder's target customers.",
+        "channels": [
+          "website",
+          "phone",
+          "email"
+        ],
+        "offers": [
+          "Fees start as low as 300 rupees per day for the workshop",
+          "Unlock a fantastic 10% discount on your next dance studio rental by simply scanning our QR code"
+        ],
+        "source_urls": [
+          "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+        ]
+      },
+      {
+        "name": "Raack Academy of Dance",
+        "locality": "Saidapet",
+        "offering": "Adult and youth dance programs plus dance fitness; the website specifically mentions Dance Fitness, Choreolab, Film Covers and Just Dance, and says it has separate packages for kids, teenagers, youths and dance fitness.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Dance Classes for Kids",
+            "amount_inr": 1600,
+            "unit": "per class",
+            "source_url": "https://www.justdial.com/Chennai/Raack-Academy-Of-Dance-Near-Five-Lights-Saidapet/044PXX44-XX44-160224121707-F5E7_BZDET/service-catalog-hobby-class-fees"
+          },
+          {
+            "label": "January and February fee after 25% off, Dance Fitness / All Courses",
+            "amount_inr": 999,
+            "unit": "per month",
+            "source_url": "https://www.instagram.com/p/DUBBDDEEzEJ/"
+          }
+        ],
+        "schedule": "unknown",
+        "fit_reason": "Raack is a branded dance academy in Chennai with adult-focused courses including dance fitness, so it competes for working professionals seeking structured evening or weekend classes.",
+        "channels": [
+          "website",
+          "Instagram",
+          "Justdial",
+          "phone",
+          "walk-in"
+        ],
+        "offers": [
+          "25% OFF Jan & Feb Fee",
+          "different packages for kids, teenagers & youths",
+          "separate package for zumba fitness"
+        ],
+        "source_urls": [
+          "https://raackdance.com/",
+          "https://raackdancesholinganallur.in/",
+          "https://www.justdial.com/Chennai/Raack-Academy-Of-Dance-Near-Five-Lights-Saidapet/044PXX44-XX44-160224121707-F5E7_BZDET/service-catalog-hobby-class-fees",
+          "https://www.instagram.com/p/DUBBDDEEzEJ/"
+        ]
+      },
+      {
+        "name": "Zero 6 Dance and Fitness Company",
+        "locality": "West Mambalam / Pallikaranai / T. Nagar",
+        "offering": "Dance and fitness studio offering Bollywood, Hip Hop, contemporary and Zumba-style fitness via studio classes and workshops; public listings show it as a dance and fitness company in Chennai.",
+        "price_status": "on_enquiry",
+        "prices": [],
+        "schedule": "unknown",
+        "fit_reason": "This is a Chennai dance-and-fitness brand with Bollywood and hip hop among its styles, so it matches the founder's core offer and audience even though public pricing was not clearly published on the business website.",
+        "channels": [
+          "website listing",
+          "Facebook",
+          "Justdial",
+          "walk-in",
+          "phone"
+        ],
+        "offers": [
+          "free trial dance class mentioned in social search snippets",
+          "summer camp content for kids, teens and adults"
+        ],
+        "source_urls": [
+          "https://www.justdial.com/Chennai/Zero-6-Dance-And-Fitness-Company-Next-To-S-B-S-Mootha-Gilrs-Jain-School-West-Mambalam/044PXX44-XX44-131018193740-D5E1_BZDET",
+          "https://www.facebook.com/Zero6danceandfitnesscompany/",
+          "https://dancepass.in/studios/che-zero6"
+        ]
+      },
+      {
+        "name": "The Workshop Dance Company",
+        "locality": "Thiruvottiyur",
+        "offering": "Dance classes for regular batches and workshops; public listings and social posts show adult and sub-junior classes, with styles not fully detailed in the opened sources but clearly positioned as an ongoing dance studio in Chennai.",
+        "price_status": "on_enquiry",
+        "prices": [],
+        "schedule": "unknown",
+        "fit_reason": "It is a Chennai dance studio with regular classes and workshops, so it competes for the same local dance-class demand even though the exact adult style and fee were not published on the opened pages.",
+        "channels": [
+          "Justdial",
+          "Facebook",
+          "Instagram"
+        ],
+        "offers": [
+          "first free trial class mentioned in social search snippet"
+        ],
+        "source_urls": [
+          "https://www.facebook.com/100054586863607/posts/the-workshop-dance-company-regular-class-sub-juniors-batchstudents-workshop-danc/1596248265538054/",
+          "https://www.instagram.com/reel/DdWNIhDzPdM/"
+        ]
+      },
+      {
+        "name": "Life Of Dance",
+        "locality": "Sowcarpet / Purasaiwakkam",
+        "offering": "Western dance, classical dance and Zumba fitness classes for kids, teens and adults; search results and social content indicate it is a studio brand with classes and a Chennai presence.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Academy fee range",
+            "amount_inr": 3000,
+            "unit": "per month",
+            "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+          },
+          {
+            "label": "Academy fee range upper bound",
+            "amount_inr": 5000,
+            "unit": "per month",
+            "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+          }
+        ],
+        "schedule": "weekday and weekend batches mentioned in the guide page; exact hours unknown",
+        "fit_reason": "Life Of Dance offers western and fitness-oriented dance classes in Chennai for multiple age groups, which overlaps with the founder's evening/weekend adult dance-class plan.",
+        "channels": [
+          "website",
+          "Facebook",
+          "Instagram",
+          "Justdial"
+        ],
+        "offers": [
+          "trial available mentioned in third-party class listing snippet"
+        ],
+        "source_urls": [
+          "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/",
+          "https://www.justdial.com/Chennai/Life-Of-Dance-Slam-Gym-Opposite-Building-Sowcarpet/044PXX44-XX44-230513201547-B5Y8_BZDET",
+          "https://www.facebook.com/61550192686227/posts/-ready-to-dance-welcome-to-life-of-dance-studio-looking-for-western-dance-classe/122344180982006422/",
+          "https://www.instagram.com/p/DerI8qtzVDg/"
+        ]
+      }
+    ],
+    "market_price_context": [
+      {
+        "summary": "Chennai dance class fees commonly appear around Rs.800 to Rs.3,500 per month on guide/search snippets, with one guide citing an average hourly fee of about Rs.712.",
+        "source_url": "https://www.swingersdance.com/childrens-dance-classes-in-chennai-everything-a-new-parent-needs-to-know/"
+      },
+      {
+        "summary": "A guide snippet for Chennai says at The Life of Dance Academy fees range from Rs.3,000 to Rs.5,000 per month depending on batch level, with flexible weekday and weekend batches.",
+        "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+      },
+      {
+        "summary": "A Justdial snippet for Chennai dance classes says fees depend on class duration, trainer experience, batch size, studio facilities and course level, rather than listing a single citywide price.",
+        "source_url": "https://www.justdial.com/Chennai/Dance-Classes-For-Bollywood-in-Padur/nct-10153003"
+      }
+    ]
+  },
+  "reviews": {
+    "competitors": [
+      {
+        "competitor": "Dance and Dance Studio",
+        "rating": 4.3,
+        "rating_count": 40,
+        "rating_source_url": "https://maps.google.com/?cid=14015682243815425684",
+        "likes": [
+          {
+            "point": "Classes balance challenge and fun",
+            "quote": "Classes strike the perfect balance between challenging and fun.",
+            "source_url": "https://maps.google.com/?cid=14015682243815425684"
+          },
+          {
+            "point": "Studio is clean and welcoming",
+            "quote": "The studio itself is clean, bright, and welcoming",
+            "source_url": "https://maps.google.com/?cid=14015682243815425684"
+          }
+        ],
+        "complaints": [
+          {
+            "point": "Studio felt dirty and staff were rude",
+            "quote": "Dingy studio and ill mannered staff.",
+            "source_url": "https://maps.google.com/?cid=14015682243815425684"
+          }
+        ]
+      },
+      {
+        "competitor": "Raack Academy of Dance",
+        "rating": 4.8,
+        "rating_count": 616,
+        "rating_source_url": "https://maps.google.com/?cid=12969705290911592363",
+        "likes": [
+          {
+            "point": "Teachers are supportive and patient",
+            "quote": "The instructors are highly skilled, patient, and dedicated to helping every student improve",
+            "source_url": "https://maps.google.com/?cid=12969705290911592363"
+          },
+          {
+            "point": "Management is organized and responsive",
+            "quote": "The management team is well-organized, responsive, and professional.",
+            "source_url": "https://maps.google.com/?cid=12969705290911592363"
+          },
+          {
+            "point": "Studio is clean and spacious",
+            "quote": "The studio is clean, spacious, and has a very positive vibe.",
+            "source_url": "https://maps.google.com/?cid=12969705290911592363"
+          }
+        ],
+        "complaints": [
+          {
+            "point": "One reviewer reported cliquish behavior and ignoring complaints",
+            "quote": "the master keep ignoring the complaint from my kid.",
+            "source_url": "https://maps.google.com/?cid=12969705290911592363"
+          },
+          {
+            "point": "Parents and children were described as dominating the batch",
+            "quote": "the whole group of kids won't speak with newly joined kids",
+            "source_url": "https://maps.google.com/?cid=12969705290911592363"
+          }
+        ]
+      },
+      {
+        "competitor": "Zero 6 Dance and Fitness Company",
+        "rating": null,
+        "rating_count": null,
+        "rating_source_url": null,
+        "likes": [],
+        "complaints": []
+      },
+      {
+        "competitor": "The Workshop Dance Company",
+        "rating": 3.7,
+        "rating_count": 52,
+        "rating_source_url": "https://maps.google.com/?cid=1604188953751820214",
+        "likes": [],
+        "complaints": [
+          {
+            "point": "Staff were rude and unhelpful",
+            "quote": "behaved rudely. Very disappointing and inhumane behavior",
+            "source_url": "https://maps.google.com/?cid=1604188953751820214"
+          },
+          {
+            "point": "Customers were refused Google Pay for small amounts",
+            "quote": "They shopkeeper told not accept under 50 rs",
+            "source_url": "https://maps.google.com/?cid=1604188953751820214"
+          },
+          {
+            "point": "Owner was said to lack basic manners",
+            "quote": "Owner doesn't know the basic manners.",
+            "source_url": "https://maps.google.com/?cid=1604188953751820214"
+          }
+        ]
+      },
+      {
+        "competitor": "Life Of Dance",
+        "rating": null,
+        "rating_count": null,
+        "rating_source_url": null,
+        "likes": [],
+        "complaints": []
+      }
+    ]
+  },
+  "strategy": {
+    "market_gap": "The clearest gap is a truly convenient, adult-only evening/weekend dance option for working professionals that is openly priced and easy to try without awkwardness. Competitors either publish mixed-age programs, hide pricing, or have review issues around rude staff and poor handling of customers, so none clearly owns a polished, professional experience for 22 to 40-year-old adults after work.",
+    "gap_evidence": [
+      "Dance and Dance Studio",
+      "Raack Academy of Dance",
+      "Zero 6 Dance and Fitness Company",
+      "The Workshop Dance Company",
+      "Life Of Dance"
+    ],
+    "positioning": "After-work Bollywood, hip-hop & dance fitness for working professionals — ₹999/month",
+    "recommended_price_inr": 999,
+    "price_unit": "per month",
+    "price_reason": "₹999/month sits below Life Of Dance’s ₹3000 to ₹5000 per month guide range and matches Raack Academy of Dance’s published ₹999 per month offer for dance fitness/all courses. It is also far easier to compare than competitors with on-enquiry pricing like Zero 6 Dance and Fitness Company and The Workshop Dance Company."
+  },
+  "matrix": [
+    {
+      "name": "Dance and Dance Studio",
+      "locality": "Anna Salai / Greams Road",
+      "price": {
+        "amount_inr": 500,
+        "unit": "per class",
+        "label": "Zumba / Basics Fitness Classes",
+        "source_url": "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+      },
+      "price_status": "published",
+      "schedule": "Sundays for weekend workshops; Bollywood 2.00 to 5.00 pm; Zumba/Basics Fitness 6.30 to 8.30 pm; Hiphop 5.00 to 7.00 pm",
+      "channels": [
+        "website",
+        "phone",
+        "email"
+      ],
+      "rating": 4.3,
+      "rating_count": 40,
+      "likes": [
+        "Classes balance challenge and fun",
+        "Studio is clean and welcoming"
+      ],
+      "complaints": [
+        "Studio felt dirty and staff were rude"
+      ]
+    },
+    {
+      "name": "Raack Academy of Dance",
+      "locality": "Saidapet",
+      "price": {
+        "amount_inr": 999,
+        "unit": "per month",
+        "label": "January and February fee after 25% off, Dance Fitness / All Courses",
+        "source_url": "https://www.instagram.com/p/DUBBDDEEzEJ/"
+      },
+      "price_status": "published",
+      "schedule": "unknown",
+      "channels": [
+        "website",
+        "Instagram",
+        "Justdial",
+        "phone",
+        "walk-in"
+      ],
+      "rating": 4.8,
+      "rating_count": 616,
+      "likes": [
+        "Teachers are supportive and patient",
+        "Management is organized and responsive",
+        "Studio is clean and spacious"
+      ],
+      "complaints": [
+        "One reviewer reported cliquish behavior and ignoring complaints",
+        "Parents and children were described as dominating the batch"
+      ]
+    },
+    {
+      "name": "Zero 6 Dance and Fitness Company",
+      "locality": "West Mambalam / Pallikaranai / T. Nagar",
+      "price": null,
+      "price_status": "on_enquiry",
+      "schedule": "unknown",
+      "channels": [
+        "website listing",
+        "Facebook",
+        "Justdial",
+        "walk-in",
+        "phone"
+      ],
+      "rating": null,
+      "rating_count": null,
+      "likes": [],
+      "complaints": []
+    },
+    {
+      "name": "The Workshop Dance Company",
+      "locality": "Thiruvottiyur",
+      "price": null,
+      "price_status": "on_enquiry",
+      "schedule": "unknown",
+      "channels": [
+        "Justdial",
+        "Facebook",
+        "Instagram"
+      ],
+      "rating": 3.7,
+      "rating_count": 52,
+      "likes": [],
+      "complaints": [
+        "Staff were rude and unhelpful",
+        "Customers were refused Google Pay for small amounts",
+        "Owner was said to lack basic manners"
+      ]
+    },
+    {
+      "name": "Life Of Dance",
+      "locality": "Sowcarpet / Purasaiwakkam",
+      "price": {
+        "amount_inr": 3000,
+        "unit": "per month",
+        "label": "Academy fee range",
+        "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+      },
+      "price_status": "published",
+      "schedule": "weekday and weekend batches mentioned in the guide page; exact hours unknown",
+      "channels": [
+        "website",
+        "Facebook",
+        "Instagram",
+        "Justdial"
+      ],
+      "rating": null,
+      "rating_count": null,
+      "likes": [],
+      "complaints": []
+    }
+  ],
+  "plan": {
+    "summary": "The best opening is a friendly, adult-only dance class for working professionals in the evenings and on weekends, with Bollywood, hip-hop, and dance fitness in one simple offer. Competitors are weaker on convenience, clear pricing, and a welcoming first experience, so your edge is to keep the schedule easy, the message clear, and the trial low-pressure.",
+    "weeks": [
+      {
+        "week": 1,
+        "focus": "Set up one clear offer and test interest",
+        "actions": [
+          "Choose one offer for adults only: evening and weekend dance classes for working professionals.",
+          "Create a simple flyer and WhatsApp message with the class timings, dance styles, and a trial class invite.",
+          "Make a list of 30 nearby offices, coworking spaces, apartments, and resident groups to approach."
+        ]
+      },
+      {
+        "week": 2,
+        "focus": "Promote the trial class to nearby groups",
+        "actions": [
+          "Visit 10 office parks or coworking spaces and leave flyers at reception.",
+          "Share the offer in 10 local WhatsApp groups for residents and working professionals.",
+          "Contact 10 HR, admin, or community managers and ask them to share the class with employees or residents."
+        ]
+      },
+      {
+        "week": 3,
+        "focus": "Run trial classes and collect feedback",
+        "actions": [
+          "Run 2 trial classes, one on a weekday evening and one on a weekend.",
+          "Ask every attendee to fill a short feedback form on timing, comfort, dance style, and price.",
+          "Collect at least 10 short comments or testimonials from people who attend or show interest."
+        ]
+      },
+      {
+        "week": 4,
+        "focus": "Turn interest into paid sign-ups",
+        "actions": [
+          "Follow up with every trial attendee on WhatsApp and invite them to join the monthly plan.",
+          "Keep the offer simple: one clear monthly fee, one clear schedule, and one easy first step to join.",
+          "Review attendance and feedback, then keep the best time slot and the most popular dance mix for the next month."
+        ]
+      }
+    ]
+  },
+  "report_file": "outputs/report.md",
+  "attempts": {
+    "research": [],
+    "reviews": [],
+    "strategy": [],
+    "report": [
+      {
+        "stopped_by": "format",
+        "feedback": "Your answer must be one JSON object matching the LaunchPlan schema. Error: 4 validation errors for LaunchPlan\nweeks.0.week\n  Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='week 1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/int_parsing\nweeks.1.week\n  Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='week 2', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/int_parsing\nweeks.2.week\n  Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='week 3', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/int_parsing\nweeks.3.week\n  Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='week 4', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/int_parsing"
+      },
+      {
+        "stopped_by": null,
+        "feedback": "passed"
+      }
+    ]
+  },
+  "tool_calls": {}
+}

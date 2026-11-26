@@ -1,0 +1,261 @@
+{
+  "brief": {
+    "idea": "Evening and weekend dance classes (Bollywood, hip-hop, dance fitness)",
+    "city": "Chennai",
+    "target_customer": "Working professionals, age 22 to 40",
+    "known_competitors": []
+  },
+  "started_at": "2026-11-25T08:46:37",
+  "seconds": 56.5,
+  "guardrail_retries": 0,
+  "fit_verdicts": [
+    {
+      "judgements": [
+        {
+          "name": "Dance and Dance Studio",
+          "direct_competitor": true,
+          "reason": "It offers adult Bollywood, hip-hop, and dance-fitness classes in Chennai with evening and weekend options."
+        },
+        {
+          "name": "Unitedbydance Community",
+          "direct_competitor": true,
+          "reason": "It serves working adults in Chennai with Bollywood and hip-hop classes in evening and weekend batches."
+        },
+        {
+          "name": "Zenith Dance Academy",
+          "direct_competitor": true,
+          "reason": "It sells Bollywood and hip-hop dance packages in Chennai with evening-batch options and workout-oriented classes."
+        },
+        {
+          "name": "Dance Off Dance and Fitness Studio",
+          "direct_competitor": true,
+          "reason": "It appears to run adult Bollywood and hip-hop dance and fitness classes in Chennai for the same audience."
+        },
+        {
+          "name": "RAACK Academy of Dance",
+          "direct_competitor": true,
+          "reason": "It offers adult evening Bollywood and hip-hop classes in Chennai, matching the founder’s target market."
+        }
+      ]
+    }
+  ],
+  "guardrail_attempts": [
+    {
+      "stopped_by": null,
+      "feedback": "passed",
+      "repairs": [
+        "Moved price Rs 400 for 'Dance and Dance Studio' to https://www.instagram.com/reel/DR13LLUkvYp/, the page that shows it.",
+        "Removed source https://www.instagram.com/reel/De0dOuazUuZ/ for 'Dance Off Dance and Fitness Studio': it never names the business.",
+        "Removed price Rs 1500 ('Adult batch joining fee') for 'Dance Off Dance and Fitness Studio': no page shows it next to the business.",
+        "Removed price Rs 800 ('Adult monthly fee') for 'Dance Off Dance and Fitness Studio': no page shows it next to the business."
+      ]
+    }
+  ],
+  "evidence_units": 67,
+  "status": "ok",
+  "research": {
+    "competitors": [
+      {
+        "name": "Dance and Dance Studio",
+        "locality": "Anna Salai / Greams Road",
+        "offering": "Bollywood, Hip Hop, Zumba fitness, freestyle and weekend dance workshops for adults; the site says it teaches ages 14 to 60 and has regular classes plus weekend workshops.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Evening batch per person",
+            "amount_inr": 400,
+            "unit": "per class",
+            "source_url": "https://www.instagram.com/reel/DR13LLUkvYp/"
+          },
+          {
+            "label": "Zumba fitness classes",
+            "amount_inr": 150,
+            "unit": "per class",
+            "source_url": "https://www.danceanddance.com/studio/"
+          },
+          {
+            "label": "Zumba fitness package",
+            "amount_inr": 1000,
+            "unit": "other",
+            "source_url": "https://www.danceanddance.com/studio/"
+          }
+        ],
+        "schedule": "Weekday evening batch 3:00 PM to 6:00 PM; Zumba classes Tuesdays and Thursdays 7:00 PM to 8:00 PM; weekend workshops mentioned on site.",
+        "fit_reason": "It is a Chennai dance studio offering adult Bollywood, hip hop and dance-fitness classes in the same after-work and weekend use case as the founder’s plan.",
+        "channels": [
+          "website",
+          "phone",
+          "email"
+        ],
+        "offers": [
+          "Dance workshop every Sunday",
+          "Money Back Guarantee"
+        ],
+        "source_urls": [
+          "https://www.danceanddance.com/studio/",
+          "https://www.danceanddance.com/studio/studio-rentals-chennai.php",
+          "https://www.instagram.com/reel/DR13LLUkvYp/"
+        ]
+      },
+      {
+        "name": "Unitedbydance Community",
+        "locality": "Karapakkam",
+        "offering": "Studio-based dance classes for adults, women and children; the page explicitly lists Bollywood, Hip-Hop, Contemporary and locking, plus weekday evening, weekend and early-morning adult batches.",
+        "price_status": "on_enquiry",
+        "prices": [],
+        "schedule": "Adults: Monday and Wednesday 8:00 PM to 9:00 PM; Saturday 7:00 PM to 8:00 PM; Sunday 12:00 noon to 1:00 PM; early-morning working-adult batch Tuesday and Thursday 8:00 AM to 9:00 AM.",
+        "fit_reason": "It serves working adults in Chennai with adult evening and weekend dance batches in Bollywood, hip-hop and related styles, so it competes directly for the same customer segment.",
+        "channels": [
+          "website",
+          "phone",
+          "WhatsApp",
+          "email"
+        ],
+        "offers": [
+          "Separate batches for women",
+          "Yearly show participation optional"
+        ],
+        "source_urls": [
+          "https://www.ubdcommunity.com/classes"
+        ]
+      },
+      {
+        "name": "Zenith Dance Academy",
+        "locality": "unknown",
+        "offering": "Professional dance course packages covering Bollywood, hip hop, contemporary, belly, parkour and dance workout; packages are sold as class bundles and include evening-batch timing notes.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Offline package, 8 classes, 2 days/week",
+            "amount_inr": 2100,
+            "unit": "per course",
+            "source_url": "https://zenithdanceacademy.in/package/"
+          },
+          {
+            "label": "Offline package, 12 classes, 3 days/week",
+            "amount_inr": 3100,
+            "unit": "per course",
+            "source_url": "https://zenithdanceacademy.in/package/"
+          },
+          {
+            "label": "Offline package, 20 classes, 5 days/week",
+            "amount_inr": 5100,
+            "unit": "per course",
+            "source_url": "https://zenithdanceacademy.in/package/"
+          },
+          {
+            "label": "Offline package, 24 classes, 6 days/week",
+            "amount_inr": 6100,
+            "unit": "per course",
+            "source_url": "https://zenithdanceacademy.in/package/"
+          },
+          {
+            "label": "Dance workout, 30 classes, 6 days/week",
+            "amount_inr": 1500,
+            "unit": "per course",
+            "source_url": "https://zenithdanceacademy.in/package/"
+          }
+        ],
+        "schedule": "Evening batch timing is noted as 1 hour only; class frequency is sold as 2, 3, 5 or 6 days/week packages.",
+        "fit_reason": "It sells packaged dance classes in Bollywood and hip hop, including workout-oriented formats, which overlaps with evening/weekend classes for working adults.",
+        "channels": [
+          "website",
+          "phone",
+          "book a trial form"
+        ],
+        "offers": [
+          "Book for trial",
+          "Online and offline classes",
+          "Certified professional course",
+          "Flexible locations"
+        ],
+        "source_urls": [
+          "https://zenithdanceacademy.in/package/"
+        ]
+      },
+      {
+        "name": "Dance Off Dance and Fitness Studio",
+        "locality": "Chennai",
+        "offering": "Kids and adult dance classes, choreography, workshops and fitness-oriented dance formats; Instagram posts mention Bollywood, hip-hop, contemporary, salsa and adult batches.",
+        "price_status": "not_found",
+        "prices": [],
+        "schedule": "Adult batch timing is not fully shown in the source snippet; the studio’s Instagram positions it as an adults batch with fitness-oriented classes.",
+        "fit_reason": "It is a Chennai dance-and-fitness studio actively marketing adult Bollywood and hip-hop classes, so it competes for the same working-professional audience.",
+        "channels": [
+          "Instagram",
+          "DM",
+          "phone"
+        ],
+        "offers": [
+          "Kids and adults classes",
+          "Workshops",
+          "Fitness"
+        ],
+        "source_urls": [
+          "https://www.instagram.com/danceoffdance/?hl=en"
+        ]
+      },
+      {
+        "name": "RAACK Academy of Dance",
+        "locality": "Chennai",
+        "offering": "Adult dance classes with Bollywood and hip-hop style content; Instagram search result mentions an introductory offer for adults and the studio brand is positioned for dance classes in Chennai.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Introductory offer",
+            "amount_inr": 999,
+            "unit": "per month",
+            "source_url": "https://www.instagram.com/reel/DbGFbZ-h-HO/"
+          }
+        ],
+        "schedule": "Adult intermediate batch every Tuesday and Thursday at 8:00 PM; first 2 classes free.",
+        "fit_reason": "It offers adult evening dance batches in Chennai with an introductory monthly price, competing for the same after-work learner segment.",
+        "channels": [
+          "Instagram",
+          "phone",
+          "DM"
+        ],
+        "offers": [
+          "First 2 classes free",
+          "Introductory offer",
+          "Adult intermediate batch"
+        ],
+        "source_urls": [
+          "https://www.instagram.com/reel/DbGFbZ-h-HO/"
+        ]
+      }
+    ],
+    "market_price_context": [
+      {
+        "summary": "UrbanPro lists the average fee for dance classes in Chennai at Rs. 400 - 500 per month.",
+        "source_url": "https://www.urbanpro.com/chennai/dance-classes"
+      },
+      {
+        "summary": "UrbanPro’s hip-hop dance classes page shows monthly fee guidance of INR 3,600 - INR 7,200 for a 12-class pattern and says the fee varies between online and offline classes.",
+        "source_url": "https://www.urbanpro.com/chennai/hip-hop-dance-classes"
+      },
+      {
+        "summary": "UrbanPro’s Bollywood dance classes page shows an average price of INR 450/hr total and says the fee charged varies between online and offline classes.",
+        "source_url": "https://www.urbanpro.com/chennai/bollywood-dance-classes"
+      },
+      {
+        "summary": "Justdial’s Chennai Bollywood dance classes page says fees depend on class duration, trainer experience, batch size, studio facilities, and course level, rather than giving one fixed city price.",
+        "source_url": "https://www.justdial.com/Chennai/Dance-Classes-For-Bollywood/nct-10153003"
+      }
+    ]
+  },
+  "problems": [],
+  "token_usage": {
+    "total_tokens": 76066,
+    "prompt_tokens": 73834,
+    "cached_prompt_tokens": 38144,
+    "completion_tokens": 2232,
+    "reasoning_tokens": 0,
+    "cache_creation_tokens": 0,
+    "successful_requests": 5
+  },
+  "tool_calls": {
+    "Search the internet with Serper": 8,
+    "Read website content": 4
+  }
+}

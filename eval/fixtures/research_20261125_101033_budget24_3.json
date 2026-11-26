@@ -1,0 +1,213 @@
+{
+  "brief": {
+    "idea": "Evening and weekend dance classes (Bollywood, hip-hop, dance fitness)",
+    "city": "Chennai",
+    "target_customer": "Working professionals, age 22 to 40",
+    "known_competitors": []
+  },
+  "started_at": "2026-11-25T10:09:57",
+  "seconds": 36.0,
+  "guardrail_retries": 0,
+  "fit_verdicts": [
+    {
+      "judgements": [
+        {
+          "name": "Dance and Dance Studio",
+          "direct_competitor": true,
+          "reason": "Adult Bollywood, hip-hop, and dance fitness classes with evening and weekend slots in Chennai match the founder's offer closely."
+        },
+        {
+          "name": "Raack Academy of Dance",
+          "direct_competitor": true,
+          "reason": "It offers adult Bollywood, hip-hop, and dance fitness classes in Chennai with flexible weekday and weekend scheduling."
+        },
+        {
+          "name": "The Life of Dance",
+          "direct_competitor": true,
+          "reason": "It markets adult Bollywood and hip-hop classes with evening and weekend schedules, overlapping with the target audience and service."
+        },
+        {
+          "name": "Zero 6 Dance and Fitness Company",
+          "direct_competitor": true,
+          "reason": "It appears to be a Chennai dance and fitness studio offering Bollywood, hip-hop, and dance fitness classes for adults."
+        }
+      ]
+    }
+  ],
+  "guardrail_attempts": [
+    {
+      "stopped_by": null,
+      "feedback": "passed",
+      "repairs": []
+    }
+  ],
+  "evidence_units": 53,
+  "status": "ok",
+  "research": {
+    "competitors": [
+      {
+        "name": "Dance and Dance Studio",
+        "locality": "Anna Salai / Greams Road",
+        "offering": "Bollywood, Hip Hop, Zumba fitness, dance workshops, and dedicated dance fitness classes for adults; also weekend dance workshop and evening classes are listed.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Zumba fitness classes",
+            "amount_inr": 150,
+            "unit": "per class",
+            "source_url": "https://www.danceanddance.com/studio/#pricing"
+          },
+          {
+            "label": "Zumba fitness classes (8 hours pack)",
+            "amount_inr": 1000,
+            "unit": "other",
+            "source_url": "https://www.danceanddance.com/studio/#pricing"
+          },
+          {
+            "label": "Salsa beginner class for one person",
+            "amount_inr": 500,
+            "unit": "other",
+            "source_url": "https://www.danceanddance.com/studio/#pricing"
+          },
+          {
+            "label": "Salsa beginner class for couples",
+            "amount_inr": 800,
+            "unit": "other",
+            "source_url": "https://www.danceanddance.com/studio/#pricing"
+          },
+          {
+            "label": "Garba per day",
+            "amount_inr": 300,
+            "unit": "per class",
+            "source_url": "https://www.danceanddance.com/studio/#pricing"
+          }
+        ],
+        "schedule": "Tuesdays and Thursdays 7:00 PM to 8:00 PM for Zumba; beginner Tamil freestyle Monday and Wednesday 6:45 PM to 7:45 PM; intermediate Monday, Wednesday and Friday 7:45 PM to 9:15 PM; Garba workshop weekday classes 6:00 PM to 8:00 PM and Friday/Sunday listed; Sunday dance workshop is mentioned.",
+        "fit_reason": "This is a Chennai dance studio offering adult-oriented Bollywood, hip hop, and dance fitness classes with evening and weekend scheduling, so it directly competes for working professionals.",
+        "channels": [
+          "website",
+          "phone",
+          "email",
+          "walk-in"
+        ],
+        "offers": [
+          "Dance workshop every Sunday",
+          "One day dance crash course",
+          "Dedicated dance fitness course",
+          "Money back guarantee"
+        ],
+        "source_urls": [
+          "https://www.danceanddance.com/studio/#pricing",
+          "https://www.danceanddance.com/studio/"
+        ]
+      },
+      {
+        "name": "Raack Academy of Dance",
+        "locality": "Chennai (multiple studios; exact branch unknown from the opened page)",
+        "offering": "Adult dance classes including dance fitness, hip hop, Bollywood and other western styles; the site specifically says it is for kids and adults and mentions flexible weekend and weekday schedules.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Adults (13 and above) membership",
+            "amount_inr": 4000,
+            "unit": "per month",
+            "source_url": "https://raackdance.com/"
+          }
+        ],
+        "schedule": "Flexible weekend and weekday schedules; exact batch timings not found on the opened page.",
+        "fit_reason": "Raack is an established Chennai dance academy with adult batches and dance-fitness style offerings, which makes it a direct substitute for evening and weekend classes aimed at working professionals.",
+        "channels": [
+          "website",
+          "Instagram",
+          "phone"
+        ],
+        "offers": [
+          "Unlimited access to all styles",
+          "Free masterclasses",
+          "Performance batch eligibility",
+          "Open admissions for 2026-2027"
+        ],
+        "source_urls": [
+          "https://raackdance.com/"
+        ]
+      },
+      {
+        "name": "The Life of Dance",
+        "locality": "unknown",
+        "offering": "Hip-hop, Bollywood, and other dance classes; the page highlights beginner, intermediate, and advanced batches plus weekend and weekday evening schedules.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Adults (13 and above) membership",
+            "amount_inr": 4000,
+            "unit": "per month",
+            "source_url": "https://thelifeofdance.com/"
+          }
+        ],
+        "schedule": "Flexible weekend and weekday evening schedules; exact batch times not found on the opened page.",
+        "fit_reason": "The academy markets Bollywood and hip-hop training with adult memberships and flexible evening/weekend timing, which overlaps strongly with the founder's target audience.",
+        "channels": [
+          "website",
+          "contact form",
+          "social media links"
+        ],
+        "offers": [
+          "Trial booking",
+          "Assessment booking",
+          "Performance opportunities",
+          "Beginner, intermediate and advanced batches"
+        ],
+        "source_urls": [
+          "https://thelifeofdance.com/"
+        ]
+      },
+      {
+        "name": "Zero 6 Dance and Fitness Company",
+        "locality": "Pallikaranai",
+        "offering": "Dance and fitness studio seen in listing search results for Bollywood, hip hop, and dance fitness-oriented classes for adults and children; direct website price page was not found in the search results opened here.",
+        "price_status": "on_enquiry",
+        "prices": [],
+        "schedule": "unknown",
+        "fit_reason": "The business appears in Chennai dance-class listings as a dance-and-fitness studio serving adults, making it a likely direct competitor, but its own pricing page was not confirmed here.",
+        "channels": [
+          "Justdial",
+          "search listing",
+          "walk-in"
+        ],
+        "offers": [],
+        "source_urls": [
+          "https://www.justdial.com/Chennai/Dance-Classes-For-Bollywood-in-Padur/nct-10153003",
+          "https://www.justdial.com/Chennai/Bollywood-Dance-Classes-For-Children/nct-12149792"
+        ]
+      }
+    ],
+    "market_price_context": [
+      {
+        "summary": "Listing-site snippets for Chennai Bollywood dance classes suggest that fees vary by class duration, trainer experience, batch size, studio facilities, and course level; some listings describe prices as reasonable rather than publishing a fixed fee.",
+        "source_url": "https://www.justdial.com/Chennai/Dance-Classes-For-Bollywood-in-Padur/nct-10153003"
+      },
+      {
+        "summary": "UrbanPro search results for Chennai Bollywood dance classes show a user budget band of Rs. 3,000 to Rs. 6,000 per month for adult training requests, which is market context rather than a single studio's price.",
+        "source_url": "https://www.urbanpro.com/chennai/bollywood-dance-classes"
+      },
+      {
+        "summary": "UrbanPro search results also show a broader monthly budget band of Rs. 1,000 to Rs. 3,000 for some adult Bollywood dance-class enquiries in Chennai.",
+        "source_url": "https://jobs.urbanpro.com/chennai/bollywood-dance-classes-for-adults-in-egmore-chennai-in-egmore/67837096"
+      }
+    ]
+  },
+  "problems": [],
+  "token_usage": {
+    "total_tokens": 88085,
+    "prompt_tokens": 86250,
+    "cached_prompt_tokens": 68736,
+    "completion_tokens": 1835,
+    "reasoning_tokens": 0,
+    "cache_creation_tokens": 0,
+    "successful_requests": 8
+  },
+  "tool_calls": {
+    "searches": 6,
+    "page_reads": 6
+  }
+}

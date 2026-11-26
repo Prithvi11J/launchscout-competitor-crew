@@ -1,0 +1,33 @@
+{
+  "brief": {
+    "idea": "Evening and weekend dance classes (Bollywood, hip-hop, dance fitness)",
+    "city": "Chennai",
+    "target_customer": "Working professionals, age 22 to 40",
+    "known_competitors": []
+  },
+  "started_at": "2026-11-25T08:16:32",
+  "status": "needs_review",
+  "error": "Exception: Task failed guardrail validation after 2 retries. Last error: Your sources do not support these claims. Fix them and answer again:\n- Price Rs 1500 ('Adults monthly fee') for 'Raack Academy Of Dance' does not appear next to 'Raack Academy Of Dance' on https://lbb.in/chennai/best-dance-classes-chennai/. Use only prices shown for this business; city-wide ranges belong in market_price_context.\n- Price Rs 300 ('Personal classes') for 'Leo's Dance Academy' does not appear next to 'Leo's Dance Academy' on https://lbb.in/chennai/best-dance-classes-chennai/. Use only prices shown for this business; city-wide ranges belong in market_price_context.",
+  "seconds": 155.5,
+  "guardrail_retries": 2,
+  "fit_verdicts": [],
+  "guardrail_attempts": [
+    {
+      "stopped_by": "code rules",
+      "feedback": "Fix these problems and answer again:\n- 'UrbanPro Chennai Bollywood Dance Classes tutors/institutes' is a listing site, not a competitor. Use it as a source or as market price context."
+    },
+    {
+      "stopped_by": "evidence",
+      "feedback": "Your sources do not support these claims. Fix them and answer again:\n- Price Rs 1500 ('Adults monthly fee') for 'Raack Academy Of Dance' does not appear next to 'Raack Academy Of Dance' on https://lbb.in/chennai/best-dance-classes-chennai/. Use only prices shown for this business; city-wide ranges belong in market_price_context.\n- Price Rs 300 ('Personal classes') for 'Leo's Dance Academy' does not appear next to 'Leo's Dance Academy' on https://lbb.in/chennai/best-dance-classes-chennai/. Use only prices shown for this business; city-wide ranges belong in market_price_context.\n- Source https://thelifeofdance.com/contact/ does not mention 'The Life of Dance' in any search result or page you saw. Remove it, or replace it with a page that names this business."
+    },
+    {
+      "stopped_by": "evidence",
+      "feedback": "Your sources do not support these claims. Fix them and answer again:\n- Price Rs 1500 ('Adults monthly fee') for 'Raack Academy Of Dance' does not appear next to 'Raack Academy Of Dance' on https://lbb.in/chennai/best-dance-classes-chennai/. Use only prices shown for this business; city-wide ranges belong in market_price_context.\n- Price Rs 300 ('Personal classes') for 'Leo's Dance Academy' does not appear next to 'Leo's Dance Academy' on https://lbb.in/chennai/best-dance-classes-chennai/. Use only prices shown for this business; city-wide ranges belong in market_price_context."
+    }
+  ],
+  "evidence_units": 168,
+  "tool_calls": {
+    "Search the internet with Serper": 8,
+    "Read website content": 4
+  }
+}

@@ -1,0 +1,254 @@
+{
+  "brief": {
+    "idea": "Evening and weekend dance classes (Bollywood, hip-hop, dance fitness)",
+    "city": "Chennai",
+    "target_customer": "Working professionals, age 22 to 40",
+    "known_competitors": []
+  },
+  "started_at": "2026-11-25T23:48:00",
+  "seconds": 43.5,
+  "guardrail_retries": 0,
+  "fit_verdicts": [
+    {
+      "judgements": [
+        {
+          "name": "Dance and Dance Studio",
+          "direct_competitor": true,
+          "reason": "Offers ongoing Bollywood, hip-hop and fitness dance classes for adults in Chennai with weekend and evening slots."
+        },
+        {
+          "name": "Raack Academy of Dance",
+          "direct_competitor": true,
+          "reason": "It is a Chennai dance academy with adult-oriented dance fitness and related classes that would attract the same customers."
+        },
+        {
+          "name": "Zero 6 Dance and Fitness Company",
+          "direct_competitor": true,
+          "reason": "This Chennai studio offers Bollywood, hip-hop and fitness-style classes that overlap directly with the founder's offer."
+        },
+        {
+          "name": "The Workshop Dance Company",
+          "direct_competitor": true,
+          "reason": "It is an ongoing Chennai dance studio with regular classes and workshops, so it competes for the same local dance-class demand."
+        },
+        {
+          "name": "Life Of Dance",
+          "direct_competitor": true,
+          "reason": "It offers adult dance and Zumba fitness classes in Chennai with weekday and weekend batches, overlapping the target market."
+        }
+      ]
+    }
+  ],
+  "guardrail_attempts": [
+    {
+      "stopped_by": null,
+      "feedback": "passed",
+      "repairs": [
+        "Removed source https://www.justdial.com/Chennai/The-Workshop-Dance-Company-Shanthi-Medical-Opposite-Tiruvottiyur-High-Road-Tiruvottiyur/044PXX44-XX44-180323184826-J9P1_BZDET for 'The Workshop Dance Company': it never names the business."
+      ]
+    }
+  ],
+  "evidence_units": 69,
+  "status": "ok",
+  "research": {
+    "competitors": [
+      {
+        "name": "Dance and Dance Studio",
+        "locality": "Anna Salai / Greams Road",
+        "offering": "Weekend dance workshops and ongoing dance classes in Bollywood, hip hop, Zumba, and dance fitness; the site also lists weekday and weekend schedules and multiple dance styles for adults.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Bollywood Dance Workshop, 3 hours",
+            "amount_inr": 800,
+            "unit": "per course",
+            "source_url": "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+          },
+          {
+            "label": "Bollywood Dance Workshop, 2 hours",
+            "amount_inr": 600,
+            "unit": "per course",
+            "source_url": "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+          },
+          {
+            "label": "Zumba / Basics Fitness Classes",
+            "amount_inr": 500,
+            "unit": "per class",
+            "source_url": "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+          },
+          {
+            "label": "Hiphop Workshop",
+            "amount_inr": 500,
+            "unit": "per class",
+            "source_url": "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+          }
+        ],
+        "schedule": "Sundays for weekend workshops; Bollywood 2.00 to 5.00 pm; Zumba/Basics Fitness 6.30 to 8.30 pm; Hiphop 5.00 to 7.00 pm",
+        "fit_reason": "This is a Chennai dance studio selling Bollywood, hip hop and fitness-oriented classes to adults with weekend and evening timing, which overlaps directly with the founder's target customers.",
+        "channels": [
+          "website",
+          "phone",
+          "email"
+        ],
+        "offers": [
+          "Fees start as low as 300 rupees per day for the workshop",
+          "Unlock a fantastic 10% discount on your next dance studio rental by simply scanning our QR code"
+        ],
+        "source_urls": [
+          "https://www.danceanddance.com/studio/chennai-weekend-dance-workshop.php"
+        ]
+      },
+      {
+        "name": "Raack Academy of Dance",
+        "locality": "Saidapet",
+        "offering": "Adult and youth dance programs plus dance fitness; the website specifically mentions Dance Fitness, Choreolab, Film Covers and Just Dance, and says it has separate packages for kids, teenagers, youths and dance fitness.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Dance Classes for Kids",
+            "amount_inr": 1600,
+            "unit": "per class",
+            "source_url": "https://www.justdial.com/Chennai/Raack-Academy-Of-Dance-Near-Five-Lights-Saidapet/044PXX44-XX44-160224121707-F5E7_BZDET/service-catalog-hobby-class-fees"
+          },
+          {
+            "label": "January and February fee after 25% off, Dance Fitness / All Courses",
+            "amount_inr": 999,
+            "unit": "per month",
+            "source_url": "https://www.instagram.com/p/DUBBDDEEzEJ/"
+          }
+        ],
+        "schedule": "unknown",
+        "fit_reason": "Raack is a branded dance academy in Chennai with adult-focused courses including dance fitness, so it competes for working professionals seeking structured evening or weekend classes.",
+        "channels": [
+          "website",
+          "Instagram",
+          "Justdial",
+          "phone",
+          "walk-in"
+        ],
+        "offers": [
+          "25% OFF Jan & Feb Fee",
+          "different packages for kids, teenagers & youths",
+          "separate package for zumba fitness"
+        ],
+        "source_urls": [
+          "https://raackdance.com/",
+          "https://raackdancesholinganallur.in/",
+          "https://www.justdial.com/Chennai/Raack-Academy-Of-Dance-Near-Five-Lights-Saidapet/044PXX44-XX44-160224121707-F5E7_BZDET/service-catalog-hobby-class-fees",
+          "https://www.instagram.com/p/DUBBDDEEzEJ/"
+        ]
+      },
+      {
+        "name": "Zero 6 Dance and Fitness Company",
+        "locality": "West Mambalam / Pallikaranai / T. Nagar",
+        "offering": "Dance and fitness studio offering Bollywood, Hip Hop, contemporary and Zumba-style fitness via studio classes and workshops; public listings show it as a dance and fitness company in Chennai.",
+        "price_status": "on_enquiry",
+        "prices": [],
+        "schedule": "unknown",
+        "fit_reason": "This is a Chennai dance-and-fitness brand with Bollywood and hip hop among its styles, so it matches the founder's core offer and audience even though public pricing was not clearly published on the business website.",
+        "channels": [
+          "website listing",
+          "Facebook",
+          "Justdial",
+          "walk-in",
+          "phone"
+        ],
+        "offers": [
+          "free trial dance class mentioned in social search snippets",
+          "summer camp content for kids, teens and adults"
+        ],
+        "source_urls": [
+          "https://www.justdial.com/Chennai/Zero-6-Dance-And-Fitness-Company-Next-To-S-B-S-Mootha-Gilrs-Jain-School-West-Mambalam/044PXX44-XX44-131018193740-D5E1_BZDET",
+          "https://www.facebook.com/Zero6danceandfitnesscompany/",
+          "https://dancepass.in/studios/che-zero6"
+        ]
+      },
+      {
+        "name": "The Workshop Dance Company",
+        "locality": "Thiruvottiyur",
+        "offering": "Dance classes for regular batches and workshops; public listings and social posts show adult and sub-junior classes, with styles not fully detailed in the opened sources but clearly positioned as an ongoing dance studio in Chennai.",
+        "price_status": "on_enquiry",
+        "prices": [],
+        "schedule": "unknown",
+        "fit_reason": "It is a Chennai dance studio with regular classes and workshops, so it competes for the same local dance-class demand even though the exact adult style and fee were not published on the opened pages.",
+        "channels": [
+          "Justdial",
+          "Facebook",
+          "Instagram"
+        ],
+        "offers": [
+          "first free trial class mentioned in social search snippet"
+        ],
+        "source_urls": [
+          "https://www.facebook.com/100054586863607/posts/the-workshop-dance-company-regular-class-sub-juniors-batchstudents-workshop-danc/1596248265538054/",
+          "https://www.instagram.com/reel/DdWNIhDzPdM/"
+        ]
+      },
+      {
+        "name": "Life Of Dance",
+        "locality": "Sowcarpet / Purasaiwakkam",
+        "offering": "Western dance, classical dance and Zumba fitness classes for kids, teens and adults; search results and social content indicate it is a studio brand with classes and a Chennai presence.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Academy fee range",
+            "amount_inr": 3000,
+            "unit": "per month",
+            "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+          },
+          {
+            "label": "Academy fee range upper bound",
+            "amount_inr": 5000,
+            "unit": "per month",
+            "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+          }
+        ],
+        "schedule": "weekday and weekend batches mentioned in the guide page; exact hours unknown",
+        "fit_reason": "Life Of Dance offers western and fitness-oriented dance classes in Chennai for multiple age groups, which overlaps with the founder's evening/weekend adult dance-class plan.",
+        "channels": [
+          "website",
+          "Facebook",
+          "Instagram",
+          "Justdial"
+        ],
+        "offers": [
+          "trial available mentioned in third-party class listing snippet"
+        ],
+        "source_urls": [
+          "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/",
+          "https://www.justdial.com/Chennai/Life-Of-Dance-Slam-Gym-Opposite-Building-Sowcarpet/044PXX44-XX44-230513201547-B5Y8_BZDET",
+          "https://www.facebook.com/61550192686227/posts/-ready-to-dance-welcome-to-life-of-dance-studio-looking-for-western-dance-classe/122344180982006422/",
+          "https://www.instagram.com/p/DerI8qtzVDg/"
+        ]
+      }
+    ],
+    "market_price_context": [
+      {
+        "summary": "Chennai dance class fees commonly appear around Rs.800 to Rs.3,500 per month on guide/search snippets, with one guide citing an average hourly fee of about Rs.712.",
+        "source_url": "https://www.swingersdance.com/childrens-dance-classes-in-chennai-everything-a-new-parent-needs-to-know/"
+      },
+      {
+        "summary": "A guide snippet for Chennai says at The Life of Dance Academy fees range from Rs.3,000 to Rs.5,000 per month depending on batch level, with flexible weekday and weekend batches.",
+        "source_url": "https://thelifeofdance.com/dance-classes-near-me-in-chennai-2/"
+      },
+      {
+        "summary": "A Justdial snippet for Chennai dance classes says fees depend on class duration, trainer experience, batch size, studio facilities and course level, rather than listing a single citywide price.",
+        "source_url": "https://www.justdial.com/Chennai/Dance-Classes-For-Bollywood-in-Padur/nct-10153003"
+      }
+    ]
+  },
+  "problems": [],
+  "token_usage": {
+    "total_tokens": 57617,
+    "prompt_tokens": 55034,
+    "cached_prompt_tokens": 37632,
+    "completion_tokens": 2583,
+    "reasoning_tokens": 0,
+    "cache_creation_tokens": 0,
+    "successful_requests": 6
+  },
+  "tool_calls": {
+    "searches": 8,
+    "page_reads": 6
+  }
+}

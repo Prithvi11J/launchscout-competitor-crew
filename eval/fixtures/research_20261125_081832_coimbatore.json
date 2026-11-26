@@ -1,0 +1,33 @@
+{
+  "brief": {
+    "idea": "Evening and weekend dance classes (Bollywood, hip-hop, dance fitness)",
+    "city": "Coimbatore",
+    "target_customer": "Working professionals, age 22 to 40",
+    "known_competitors": []
+  },
+  "started_at": "2026-11-25T08:16:32",
+  "status": "needs_review",
+  "error": "Exception: Task failed guardrail validation after 2 retries. Last error: Fix these problems and answer again:\n- 3 competitors (Platinum Dsa Dance Academy, Meenakshi V., Sathyamurthy) come only from urbanpro.com. At most 2 may rely on one website; confirm others from a second source or find different ones.",
+  "seconds": 120.1,
+  "guardrail_retries": 2,
+  "fit_verdicts": [],
+  "guardrail_attempts": [
+    {
+      "stopped_by": "evidence",
+      "feedback": "Your sources do not support these claims. Fix them and answer again:\n- Source https://www.instagram.com/p/DVEJDAxE-5s/ does not mention 'DSA Dance Academy' in any search result or page you saw. Remove it, or replace it with a page that names this business.\n- Source https://www.instagram.com/p/DVEJDAxE-5s/ does not mention 'Movementz Factor' in any search result or page you saw. Remove it, or replace it with a page that names this business.\n- Source https://www.instagram.com/reel/DW82IOLjEe7/ does not mention 'Movementz Factor' in any search result or page you saw. Remove it, or replace it with a page that names this business.\n- Price Rs 1200 ('Kids joining fee') for 'Movementz Factor' does not appear next to 'Movementz Factor' on https://www.instagram.com/p/DVEJDAxE-5s/. Use only prices shown for this business; city-wide ranges belong in market_price_context.\n- Price Rs 600 ('Kids monthly fee') for 'Movementz Factor' does not appear next to 'Movementz Factor' on https://www.instagram.com/p/DVEJDAxE-5s/. Use only prices shown for this business; city-wide ranges belong in market_price_context.\n- Price Rs 1500 ('Adults joining fee') for 'Movementz Factor' does not appear next to 'Movementz Factor' on https://www.instagram.com/p/DVEJDAxE-5s/. Use only prices shown for this business; city-wide ranges belong in market_price_context.\n- Price Rs 800 ('Adults monthly fee') for 'Movementz Factor' does not appear next to 'Movementz Factor' on https://www.instagram.com/p/DVEJDAxE-5s/. Use only prices shown for this business; city-wide ranges belong in market_price_context.\n- Source https://www.urbanpro.com/coimbatore/dance-classes does not mention 'Foot Lock Dance School' in any search result or page you saw. Remove it, or replace it with a page that names this business.\n- Price Rs 200 ('Hourly fee') for 'Foot Lock Dance School' does not appear next to 'Foot Lock Dance School' on https://www.urbanpro.com/coimbatore/dance-classes. Use only prices shown for this business; city-wide ranges belong in market_price_context.\n- Source https://www.urbanpro.com/coimbatore/dance-classes does not mention 'Ecstasy School of Dance' in any search result or page you saw. Remove it, or replace it with a page that names this business.\n- Price Rs 200 ('Hourly fee') for 'Ecstasy School of Dance' does not appear next to 'Ecstasy School of Dance' on https://www.urbanpro.com/coimbatore/dance-classes. Use only prices shown for this business; city-wide ranges belong in market_price_context."
+    },
+    {
+      "stopped_by": "code rules",
+      "feedback": "Fix these problems and answer again:\n- 3 competitors (LAAB Dance Academy, MND Dance Studio, TDA Thamizhko Dance Academy) come only from instagram.com. At most 2 may rely on one website; confirm others from a second source or find different ones."
+    },
+    {
+      "stopped_by": "code rules",
+      "feedback": "Fix these problems and answer again:\n- 3 competitors (Platinum Dsa Dance Academy, Meenakshi V., Sathyamurthy) come only from urbanpro.com. At most 2 may rely on one website; confirm others from a second source or find different ones."
+    }
+  ],
+  "evidence_units": 141,
+  "tool_calls": {
+    "Search the internet with Serper": 6,
+    "Read website content": 4
+  }
+}

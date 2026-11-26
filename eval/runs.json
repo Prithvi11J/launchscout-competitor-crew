@@ -1,0 +1,9 @@
+[
+  {"date": "2026-11-26", "idea": "Dance classes for working adults", "city": "Chennai", "outcome": "full report", "seconds": 109, "note": "run in the app, live log"},
+  {"date": "2026-11-26", "idea": "Dance classes for working adults", "city": "Chennai", "outcome": "full report (partial: fewer than 3 priced)", "seconds": 122, "note": "saved as the example report"},
+  {"date": "2026-11-26", "idea": "Millet lunch boxes", "city": "Coimbatore", "outcome": "full report", "seconds": 74, "note": "no code changes from the dance idea"},
+  {"date": "2026-11-26", "idea": "Millet lunch boxes", "city": "Coimbatore", "outcome": "stopped at research", "seconds": 90, "note": "only 2 priced (before the partial outcome existed)"},
+  {"date": "2026-11-26", "idea": "Millet lunch boxes", "city": "Coimbatore", "outcome": "stopped at research", "seconds": 97, "note": "only 1 priced on the last attempt"},
+  {"date": "2026-11-26", "idea": "Millet lunch boxes", "city": "Coimbatore", "outcome": "stopped at reviews", "seconds": 142, "note": "most lunch services have no Google listing (before the review partial)"},
+  {"date": "2026-11-26", "idea": "Millet lunch boxes", "city": "Coimbatore", "outcome": "stopped at reviews", "seconds": 131, "note": "a verified quote was lost on retries: bug, since fixed"}
+]

@@ -1,0 +1,201 @@
+{
+  "brief": {
+    "idea": "Evening and weekend dance classes (Bollywood, hip-hop, dance fitness)",
+    "city": "Coimbatore",
+    "target_customer": "Working professionals, age 22 to 40",
+    "known_competitors": []
+  },
+  "started_at": "2026-11-25T08:27:30",
+  "seconds": 94.7,
+  "guardrail_retries": 1,
+  "fit_verdicts": [
+    {
+      "judgements": [
+        {
+          "name": "Dsa Dance Academy",
+          "direct_competitor": true,
+          "reason": "Offers the same dance styles to adults in Coimbatore with weekend and studio classes."
+        },
+        {
+          "name": "Pallavi Naatiyalaya",
+          "direct_competitor": false,
+          "reason": "It focuses mainly on Bharatanatyam/Nattuvangam and broader all-ages instruction rather than the same adult Bollywood/hip-hop dance offer."
+        },
+        {
+          "name": "Move With Manoj Jackson",
+          "direct_competitor": true,
+          "reason": "It offers Bollywood, hip-hop, and fitness-style dance classes in Coimbatore for adults on a regular basis."
+        },
+        {
+          "name": "Vibe Dance Academy",
+          "direct_competitor": false,
+          "reason": "The evidence points to workshop-based training rather than an ongoing class offer."
+        }
+      ]
+    },
+    {
+      "judgements": [
+        {
+          "name": "Move With Manoj Jackson",
+          "direct_competitor": true,
+          "reason": "Offers ongoing adult Bollywood/hip-hop dance classes in Coimbatore with evening/weekend timing for adults."
+        },
+        {
+          "name": "BigFoot Dance Academy",
+          "direct_competitor": true,
+          "reason": "Provides regular adult hip-hop dance classes in Coimbatore, matching the same audience and service type."
+        },
+        {
+          "name": "Kiki's Dance Studio",
+          "direct_competitor": true,
+          "reason": "Runs recurring adult evening dance batches in Coimbatore, overlapping with the same target customers and class format."
+        }
+      ]
+    }
+  ],
+  "guardrail_attempts": [
+    {
+      "stopped_by": "fit check",
+      "feedback": "Pallavi Naatiyalaya: It focuses mainly on Bharatanatyam/Nattuvangam and broader all-ages instruction rather than the same adult Bollywood/hip-hop dance offer.\n- Vibe Dance Academy: The evidence points to workshop-based training rather than an ongoing class offer.",
+      "repairs": [
+        "Removed price Rs 1000 ('Offline, 8 classes') for 'Pallavi Naatiyalaya': no page shows it next to the business.",
+        "Removed price Rs 3500 ('Offline, daily classes') for 'Pallavi Naatiyalaya': no page shows it next to the business.",
+        "Removed source https://www.instagram.com/p/DR1Uxx0j9Sn/ for 'Step Up Dance Company': it never names the business.",
+        "Removed source https://www.instagram.com/reel/DXWxsWnEWDw/ for 'Step Up Dance Company': it never names the business.",
+        "Removed price Rs 999 ('Adult weekday batch') for 'Step Up Dance Company': no page shows it next to the business.",
+        "Removed 'Step Up Dance Company': no page you saw names it.",
+        "Removed price Rs 899 ('Workshop after 20 registrations') for 'Vibe Dance Academy': no page shows it next to the business."
+      ]
+    },
+    {
+      "stopped_by": null,
+      "feedback": "passed",
+      "repairs": [
+        "Removed source https://www.instagram.com/p/DYrGIt-gbfS/ for 'Move With Manoj Jackson': it never names the business.",
+        "Moved price Rs 999 for 'Move With Manoj Jackson' to https://www.instagram.com/reel/DaA4e8LPTop/, the page that shows it.",
+        "Removed source https://www.instagram.com/p/DR1Uxx0j9Sn/ for 'Step Up Dance Company': it never names the business.",
+        "Removed source https://www.instagram.com/reel/DXWxsWnEWDw/ for 'Step Up Dance Company': it never names the business.",
+        "Removed price Rs 999 ('Adult batch') for 'Step Up Dance Company': no page shows it next to the business.",
+        "Removed 'Step Up Dance Company': no page you saw names it.",
+        "Removed source https://www.instagram.com/reel/DKJ7VMCRttb/ for 'TDA Thamizhko Dance Academy': it never names the business.",
+        "Removed price Rs 2500 ('Adult beginner group batch') for 'TDA Thamizhko Dance Academy': no page shows it next to the business.",
+        "Removed 'TDA Thamizhko Dance Academy': no page you saw names it."
+      ]
+    }
+  ],
+  "evidence_units": 116,
+  "status": "ok",
+  "research": {
+    "competitors": [
+      {
+        "name": "Move With Manoj Jackson",
+        "locality": "Ram Nagar / Kattoor, Coimbatore",
+        "offering": "Adult dance classes in Coimbatore; Instagram posts mention regular adult classes and dance styles aimed at beginners/intermediate dancers, with Bollywood/hip-hop style positioning in search results.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Monthly classes",
+            "amount_inr": 999,
+            "unit": "per month",
+            "source_url": "https://www.instagram.com/reel/DaA4e8LPTop/"
+          }
+        ],
+        "schedule": "Adults Batch: Monday, Wednesday, Friday; one search snippet shows 6:00 PM–7:30 PM and another shows 8:00 AM–9:00 AM, while the post itself highlights evening availability and classes after work/on weekends.",
+        "fit_reason": "This directly competes for working professionals aged 22 to 40 who want affordable adult dance classes in Coimbatore after office hours.",
+        "channels": [
+          "Instagram",
+          "call/WhatsApp"
+        ],
+        "offers": [
+          "No admission fee"
+        ],
+        "source_urls": [
+          "https://www.instagram.com/reel/DaA4e8LPTop/"
+        ]
+      },
+      {
+        "name": "BigFoot Dance Academy",
+        "locality": "Coimbatore",
+        "offering": "Adults dance classes with hip-hop positioning and regular batch promotion; search snippets show adults-focused dance learning and batch announcements.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Adults dance class",
+            "amount_inr": 500,
+            "unit": "per month",
+            "source_url": "https://www.google.com/goto?url=CAESaAHEIkXXBt0tQ5DxLRXvkzHuWVNcyTpMrXUKZVRL9FOz9zKsU_tNwnZcoZgiKxHFSHNNlzhKtGeMFiHX1sl7dZGZLOdrNRh1Y9vOYz5URX5gz5NYhW_OTjcQO-V3d3K02-JxqPOCFzct&gsessionid=-A-mqAiWV1TkpijI6DwbBEvZlqW772KD_PF2GZqNI2ivnEFucHIjMg"
+          }
+        ],
+        "schedule": "Search snippet indicates adult batches and regular classes; exact timetable not found.",
+        "fit_reason": "It competes for budget-conscious young adults in Coimbatore looking for ongoing hip-hop style classes rather than one-off workshops.",
+        "channels": [
+          "Instagram",
+          "phone"
+        ],
+        "offers": [
+          "Monthly fee promotion"
+        ],
+        "source_urls": [
+          "https://www.google.com/goto?url=CAESaAHEIkXXBt0tQ5DxLRXvkzHuWVNcyTpMrXUKZVRL9FOz9zKsU_tNwnZcoZgiKxHFSHNNlzhKtGeMFiHX1sl7dZGZLOdrNRh1Y9vOYz5URX5gz5NYhW_OTjcQO-V3d3K02-JxqPOCFzct&gsessionid=-A-mqAiWV1TkpijI6DwbBEvZlqW772KD_PF2GZqNI2ivnEFucHIjMg"
+        ]
+      },
+      {
+        "name": "Kiki's Dance Studio",
+        "locality": "Coimbatore",
+        "offering": "Adult batch dance classes with evening timings; search snippets mention adults batch, evening hours, and styles that include dance fitness/hip-hop style classes.",
+        "price_status": "published",
+        "prices": [
+          {
+            "label": "Adults batch",
+            "amount_inr": 1500,
+            "unit": "per month",
+            "source_url": "https://www.google.com/goto?url=CAESaAHEIkXX56JbyKOmpFarYBiwuHzFQFlxASzVOUGOQ6m357G8JEYdEo-GL0cdIoMfNqi6WEA8Mh9jVmgkDp4EsqypYbaz5liM2RH7k3QjTtzrl_34sNeexpvWBtq9qt9AaQtrQazOguMX&gsessionid=zPV4AvJ0ZRSZDHl9pU5NyfhrAx6XWSpsIYo2JPkM-v6t7O1RZY0zBA"
+          }
+        ],
+        "schedule": "Adults batch: Monday, Wednesday and Friday; evening 7:00 PM to 8:00 PM.",
+        "fit_reason": "It competes directly for working professionals who want an after-office adult dance class in Coimbatore with regular weekly attendance.",
+        "channels": [
+          "Instagram"
+        ],
+        "offers": [
+          "Admission open"
+        ],
+        "source_urls": [
+          "https://www.google.com/goto?url=CAESaAHEIkXX56JbyKOmpFarYBiwuHzFQFlxASzVOUGOQ6m357G8JEYdEo-GL0cdIoMfNqi6WEA8Mh9jVmgkDp4EsqypYbaz5liM2RH7k3QjTtzrl_34sNeexpvWBtq9qt9AaQtrQazOguMX&gsessionid=zPV4AvJ0ZRSZDHl9pU5NyfhrAx6XWSpsIYo2JPkM-v6t7O1RZY0zBA"
+        ]
+      }
+    ],
+    "market_price_context": [
+      {
+        "summary": "UrbanPro lists the average fee for Dance Classes in Coimbatore as Rs. 400 - 500 per month.",
+        "source_url": "https://www.urbanpro.com/coimbatore/dance-classes"
+      },
+      {
+        "summary": "UrbanPro lists the average rate for Dance Classes in Coimbatore as INR 475/hr.",
+        "source_url": "https://www.urbanpro.com/coimbatore/dance-classes"
+      },
+      {
+        "summary": "Superprof search snippet shows Hip-Hop dance classes in Coimbatore with fees from ₹459/hr and an average rate of ₹459/hr.",
+        "source_url": "https://www.superprof.co.in/lessons/hip-hop-dance/coimbatore/"
+      },
+      {
+        "summary": "Justdial search result snippets indicate that dance-class fees in Coimbatore vary by duration, trainer experience, batch size, studio facilities and course level, rather than a single fixed city price.",
+        "source_url": "https://www.justdial.com/Coimbatore/Dance-Classes-For-Bollywood/nct-10153003"
+      }
+    ]
+  },
+  "problems": [],
+  "token_usage": {
+    "total_tokens": 123397,
+    "prompt_tokens": 118669,
+    "cached_prompt_tokens": 79744,
+    "completion_tokens": 4728,
+    "reasoning_tokens": 0,
+    "cache_creation_tokens": 0,
+    "successful_requests": 11
+  },
+  "tool_calls": {
+    "Search the internet with Serper": 6,
+    "Read website content": 4
+  }
+}

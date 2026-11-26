@@ -234,16 +234,16 @@ CITY_ALIASES = {
 }
 
 
-def place_names(city: str, locality: str) -> list[str]:
-    """Words that would place a business in the city: the city, its old names, and the
-    localities the agent claims (only if a page names the business next to them, see below)."""
+def place_names(city: str, locality: str = "") -> list[str]:
+    """Words that place a business in the city: the city and its old names.
+
+    The locality the agent claims ("Anna Salai") used to count too. The evaluation showed why
+    that was wrong: with the city switched to Madurai, 16 of 21 Chennai studios still passed,
+    because pages named them next to their Chennai localities. A claim by the agent is not
+    evidence, so only the city itself counts now. `locality` is kept for callers but unused.
+    """
     key = normalize_text(city)
-    names = [key, *CITY_ALIASES.get(key, [])]
-    for part in re.split(r"[/,;&]| and ", locality.lower()):
-        part = normalize_text(part)
-        if len(part) >= 4 and part not in {"unknown", key, "india", "tamil nadu"}:
-            names.append(part)
-    return names
+    return [key, *CITY_ALIASES.get(key, [])]
 
 
 def located_in(unit: Evidence, name: str, places: list[str]) -> bool:

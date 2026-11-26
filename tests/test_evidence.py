@@ -180,7 +180,7 @@ def test_city_confirmed_by_text_url_alias_or_locality():
     area = page("https://b.example.com", "Hips N Toez Dance Company, 5th Cross Street, Madipakkam")
     assert located_in(jd, "Zero 6 Dance and Fitness Company", place_names("Chennai", "unknown"))  # city in the URL
     assert located_in(old_name, "Raack Academy of Dance", place_names("Chennai", "unknown"))  # old city name
-    assert located_in(area, "Hips N Toez Dance Company", place_names("Chennai", "Madipakkam / T. Nagar"))
+    assert not located_in(area, "Hips N Toez Dance Company", place_names("Chennai", "Madipakkam / T. Nagar"))  # a claimed locality is not evidence
     assert not located_in(area, "Hips N Toez Dance Company", place_names("Chennai", "unknown"))
 
 
