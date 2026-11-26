@@ -15,6 +15,10 @@ what they charge, what their customers complain about, and where the gap is. Eve
 ![Tests](https://img.shields.io/badge/tests-98%20passing-2F7A4F)
 ![License](https://img.shields.io/badge/license-MIT-1B2A41)
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://launchscout-demo.streamlit.app/)
+
+**[Try it live](https://launchscout-demo.streamlit.app/)**: browse a complete example report and its evidence trail (live research needs your own API keys).
+
 https://github.com/user-attachments/assets/dab45f04-3657-46aa-aa05-b66ab2686b09
 
 *80-second demo with voice-over and captions. Turn the sound on.*
@@ -74,8 +78,10 @@ cp .env.example .env            # then put your keys in .env
 ```
 </details>
 
+Just want to look? The [live demo](https://launchscout-demo.streamlit.app/) runs without keys.
+
 Run commands from the project folder. Without API keys the app still opens: research is switched off with a note, and the example
-reports (with their evidence trails) are fully browsable.
+report (with its evidence trail) is fully browsable.
 
 ### Research your own idea
 
@@ -198,7 +204,7 @@ launchscout/
   review_checks.py strategy_checks.py report.py   # checks for the later agents, report assembly
   matrix.py trail.py pdf.py pipeline.py progress.py
 scripts/               # run, replay, evaluate, setup check
-demo/                  # saved example run shown in the app
+demo/                  # saved example run shown in the app and the live demo
 eval/                  # fixtures (real runs), labels, results
 tests/                 # 98 offline tests
 ```

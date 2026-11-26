@@ -6,7 +6,7 @@ from ui import state
 from ui.report_view import show_report
 
 st.title("Example reports")
-st.caption("Real runs of the crew. Same code, different ideas and cities: nothing was edited by hand.")
+st.caption("A real run of the crew, saved as it came out: nothing was edited by hand.")
 
 examples = state.examples()
 if not examples:

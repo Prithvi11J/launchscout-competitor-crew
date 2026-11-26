@@ -23,7 +23,7 @@ with st.form("brief", border=True):
 
 if not ready:
     st.info("This live demo has no API keys, so new research is switched off. "
-            "Open **Example reports** to see two complete runs, with every source.", icon=":material/info:")
+            "Open **Example reports** to see a complete run, with every source.", icon=":material/info:")
 else:
     st.caption("A run takes 1 to 3 minutes and uses up to about 60 web searches.")
 
