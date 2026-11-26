@@ -142,3 +142,16 @@ def test_review_partial_on_last_attempt_with_one_reviewed():
     guard.evidence = list(EVIDENCE)
     results = [guard.check(SimpleNamespace(raw=answer, messages=[]))[0] for _ in range(3)]
     assert results == [False, False, True] and guard.partial
+
+
+def test_supported_points_survive_a_worse_retry():
+    """Regression: a real quote from attempt 1 was lost when the last answer came back empty."""
+    research_guard = SimpleNamespace(last_research=SimpleNamespace(competitors=[SimpleNamespace(name=n) for n in NAMES]))
+    guard = ReviewGuardrail(research_guard)
+    guard.evidence = list(EVIDENCE)
+    good = json.dumps({"competitors": [entry("Dance and Dance Studio", complaints=[point("Dingy studio and ill mannered staff")], rating=4.3)]})
+    empty = json.dumps({"competitors": []})
+    results = [guard.check(SimpleNamespace(raw=raw, messages=[]))[0] for raw in (good, empty, empty)]
+    kept = guard.last_reviews.competitors[0]
+    assert results == [False, False, True] and guard.partial
+    assert len(kept.complaints) == 1 and kept.rating == 4.3

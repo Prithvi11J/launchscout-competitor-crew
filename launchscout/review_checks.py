@@ -84,6 +84,30 @@ def repair_reviews(reviews: ReviewResearch, evidence: list[Evidence], competitor
     return reviews, notes
 
 
+def merge_reviews(earlier: ReviewResearch | None, latest: ReviewResearch) -> ReviewResearch:
+    """Keep supported points from earlier attempts.
+
+    Bug found in a real run: attempt 1 quoted a real review, the retries had no lookups left,
+    and the final answer dropped that quote, so the run failed with 0 reviewed competitors.
+    Both inputs are already repaired, so everything kept here is backed by evidence.
+    """
+    if earlier is None:
+        return latest
+    merged = latest.model_copy(deep=True)
+    before = {c.competitor: c for c in earlier.competitors}
+    for c in merged.competitors:
+        old = before.get(c.competitor)
+        if old is None:
+            continue
+        for field in ("likes", "complaints"):
+            points = getattr(c, field)
+            seen = {normalize_text(p.quote) for p in points}
+            points += [p for p in getattr(old, field) if normalize_text(p.quote) not in seen]
+        if c.rating is None and old.rating is not None:
+            c.rating, c.rating_count, c.rating_source_url = old.rating, old.rating_count, old.rating_source_url
+    return merged
+
+
 def review_problems(reviews: ReviewResearch) -> list[str]:
     reviewed = [c for c in reviews.competitors if c.likes or c.complaints]
     complaints = sum(len(c.complaints) for c in reviews.competitors)
@@ -122,6 +146,7 @@ class ReviewGuardrail:
         research = self.research_guard.last_research
         names = [c.name for c in research.competitors] if research else [c.competitor for c in parsed.competitors]
         value, repairs = repair_reviews(parsed, self.evidence, names)
+        value = merge_reviews(self.last_reviews, value)
         self.last_reviews = value
         problems = review_problems(value)
         # Partial outcome, as for prices: small businesses often have no Google listing. On the last
