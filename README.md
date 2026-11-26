@@ -15,7 +15,9 @@ what they charge, what their customers complain about, and where the gap is. Eve
 ![Tests](https://img.shields.io/badge/tests-98%20passing-2F7A4F)
 ![License](https://img.shields.io/badge/license-MIT-1B2A41)
 
-<a href="docs/launchscout_demo.mp4"><img src="docs/demo_thumbnail.png" width="720" alt="Watch the 80-second demo"></a>
+
+
+
 
 *80-second demo with voice-over and captions. Turn the sound on.*
 
